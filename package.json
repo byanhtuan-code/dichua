@@ -15,7 +15,7 @@
     "build": "npm run build -w client",
     "verify": "npm run lint && npm run typecheck && npm run test && npm run build",
     "e2e": "npm run e2e -w client",
-    "start": "npm run build && STATIC_DIR=client/dist node --disable-warning=ExperimentalWarning server/src/main.ts",
+    "start": "node -e \"import('node:fs').then(f=>{if(!f.existsSync('client/dist/index.html'))process.exit(1)})\" || npm run build && STATIC_DIR=client/dist node --disable-warning=ExperimentalWarning server/src/main.ts",
     "docker:server": "docker buildx build --platform linux/amd64 -f server/Dockerfile -t santinh-rt:test --load ."
   },
   "devDependencies": {
