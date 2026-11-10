@@ -83,7 +83,8 @@ export interface HallInterior {
 }
 
 export async function createHallInterior(scene: Scene, assets: Assets, materials: Materials): Promise<HallInterior> {
-  const buddha = await assets.model("models/buddha.glb");
+  // Start loading the Buddha model in parallel while the CPU builds the mural and hall interior geometries.
+  const buddhaPromise = assets.model("models/buddha.glb");
 
   const owned: Material[] = [];
   const own = <M extends Material>(m: M): M => {
@@ -114,17 +115,6 @@ export async function createHallInterior(scene: Scene, assets: Assets, materials
   box(batch, "darkWood", fx0, fx1, MURAL_BOTTOM + MURAL_H, MURAL_BOTTOM + MURAL_H + 0.3, fz0, fz1, 1, false);
   box(batch, "darkWood", fx0, fx0 + 0.3, MURAL_BOTTOM, MURAL_BOTTOM + MURAL_H, fz0, fz1, 1, false);
   box(batch, "darkWood", fx1 - 0.3, fx1, MURAL_BOTTOM, MURAL_BOTTOM + MURAL_H, fz0, fz1, 1, false);
-
-  // Stone pedestal + gilded lotus base.
-  const bbox = new Box3().setFromObject(buddha.scene);
-  const size = bbox.getSize(new Vector3());
-  const scale = BUDDHA_HEIGHT / size.y;
-  const halfW = (size.x * scale) / 2 + 0.4;
-  const halfD = (size.z * scale) / 2 + 0.3;
-  box(batch, "stone", -halfW, halfW, fy, PEDESTAL_TOP, BUDDHA_Z - halfD, BUDDHA_Z + halfD, 1.2, false);
-  const lotus = new CylinderGeometry(halfW * 0.92, halfW * 0.8, LOTUS_H, 28);
-  batch.add("gold", lotus, m4.makeTranslation(0, PEDESTAL_TOP + LOTUS_H / 2, BUDDHA_Z), { uvScale: [4, 1], castShadow: false });
-  lotus.dispose();
 
   // Offering table across the front of the altar.
   box(batch, "lacquer", TABLE.xMin, TABLE.xMax, TABLE.top - 0.12, TABLE.top, TABLE.z0, TABLE.z1, 1, false);
@@ -179,9 +169,7 @@ export async function createHallInterior(scene: Scene, assets: Assets, materials
   batch.add("darkWood", malletGeo, m4.makeTranslation(0.8, INCENSE_BASE_Y + 0.06, INCENSE_Z + 0.04), { castShadow: false });
   malletGeo.dispose();
 
-  const group = batch.build("hall-interior", { ...materials, gold, lacquer, cushion, candle });
-
-  // Mural plane (1024x512 on mobile for fast boot & low VRAM, 2048x1024 on desktop).
+  // Mural plane (1024x512 on mobile for fast boot & low VRAM, 2048x1024 on desktop) — drawn while buddha.glb downloads.
   const faceY = PEDESTAL_TOP + LOTUS_H + BUDDHA_HEIGHT * BUDDHA_FACE;
   const haloY = faceY + 0.35;
   const muralW = IS_MOBILE ? 1024 : 2048;
@@ -196,29 +184,6 @@ export async function createHallInterior(scene: Scene, assets: Assets, materials
   mural.matrixAutoUpdate = false;
   mural.updateMatrix();
   mural.name = "mural";
-  group.add(mural);
-
-  // Buddha, base on the lotus, facing +Z (towards the door).
-  // `castShadow = false` because the statue sits indoors beneath the solid hall roof (which already casts the sun shadow),
-  // saving ~200,000 triangles in the directional shadow map pass every frame!
-  const statue = buddha.scene;
-  statue.scale.setScalar(scale);
-  statue.position.set(-((bbox.min.x + bbox.max.x) / 2) * scale, PEDESTAL_TOP + LOTUS_H - bbox.min.y * scale, BUDDHA_Z - ((bbox.min.z + bbox.max.z) / 2) * scale);
-  const aniso = maxAnisotropy();
-  statue.traverse((o) => {
-    if (o instanceof Mesh) {
-      o.castShadow = false;
-      o.receiveShadow = true;
-      const m = o.material as MeshStandardMaterial;
-      if (m.map) m.map.anisotropy = aniso;
-      if (m.normalMap) m.normalMap.anisotropy = aniso;
-      m.roughness = 0.46;
-      m.metalness = 0.2;
-      m.emissive = new Color(0x281808);
-    }
-  });
-  statue.name = "buddha";
-  group.add(statue);
 
   // Flames: instanced, flickering in the vertex shader.
   const flameGeo = new SphereGeometry(0.05, 8, 6);
@@ -248,7 +213,6 @@ export async function createHallInterior(scene: Scene, assets: Assets, materials
   flames.matrixAutoUpdate = false;
   flames.updateMatrix();
   flames.name = "candle-flames";
-  group.add(flames);
 
   // Incense glowing embers + rising smoke particles (single Points draw call).
   const smokeTex = radialTexture();
@@ -277,7 +241,6 @@ export async function createHallInterior(scene: Scene, assets: Assets, materials
   embers.matrixAutoUpdate = false;
   embers.updateMatrix();
   embers.name = "incense-embers";
-  group.add(embers);
 
   const smokePositions = new Float32Array(SMOKE_COUNT * 3);
   const smokeGeo = new BufferGeometry();
@@ -298,7 +261,6 @@ export async function createHallInterior(scene: Scene, assets: Assets, materials
   const smoke = new Points(smokeGeo, smokeMat);
   smoke.name = "incense-smoke";
   smoke.frustumCulled = false;
-  group.add(smoke);
 
   let incenseBoost = 0;
 
@@ -329,7 +291,6 @@ export async function createHallInterior(scene: Scene, assets: Assets, materials
   cords.updateMatrix();
   lanterns.name = "lanterns";
   cords.name = "lantern-cords";
-  group.add(lanterns, cords);
 
   // 30 cushions on the cushionPosition grid.
   const cushionGeo = new CylinderGeometry(0.46, 0.5, 0.14, 20);
@@ -347,7 +308,44 @@ export async function createHallInterior(scene: Scene, assets: Assets, materials
   cushions.matrixAutoUpdate = false;
   cushions.updateMatrix();
   cushions.name = "cushions";
-  group.add(cushions);
+
+  const buddha = await buddhaPromise;
+
+  // Stone pedestal + gilded lotus base.
+  const bbox = new Box3().setFromObject(buddha.scene);
+  const size = bbox.getSize(new Vector3());
+  const scale = BUDDHA_HEIGHT / size.y;
+  const halfW = (size.x * scale) / 2 + 0.4;
+  const halfD = (size.z * scale) / 2 + 0.3;
+  box(batch, "stone", -halfW, halfW, fy, PEDESTAL_TOP, BUDDHA_Z - halfD, BUDDHA_Z + halfD, 1.2, false);
+  const lotus = new CylinderGeometry(halfW * 0.92, halfW * 0.8, LOTUS_H, 28);
+  batch.add("gold", lotus, m4.makeTranslation(0, PEDESTAL_TOP + LOTUS_H / 2, BUDDHA_Z), { uvScale: [4, 1], castShadow: false });
+  lotus.dispose();
+
+  const group = batch.build("hall-interior", { ...materials, gold, lacquer, cushion, candle });
+  group.add(mural);
+
+  // Buddha, base on the lotus, facing +Z (towards the door).
+  // `castShadow = false` because the statue sits indoors beneath the solid hall roof (which already casts the sun shadow),
+  // saving ~200,000 triangles in the directional shadow map pass every frame!
+  const statue = buddha.scene;
+  statue.scale.setScalar(scale);
+  statue.position.set(-((bbox.min.x + bbox.max.x) / 2) * scale, PEDESTAL_TOP + LOTUS_H - bbox.min.y * scale, BUDDHA_Z - ((bbox.min.z + bbox.max.z) / 2) * scale);
+  const aniso = maxAnisotropy();
+  statue.traverse((o) => {
+    if (o instanceof Mesh) {
+      o.castShadow = false;
+      o.receiveShadow = true;
+      const m = o.material as MeshStandardMaterial;
+      if (m.map) m.map.anisotropy = aniso;
+      if (m.normalMap) m.normalMap.anisotropy = aniso;
+      m.roughness = 0.46;
+      m.metalness = 0.2;
+      m.emissive = new Color(0x281808);
+    }
+  });
+  statue.name = "buddha";
+  group.add(statue, flames, embers, smoke, lanterns, cords, cushions);
 
   // Lights: two warm spots on the statue with bounded 18 m range (so outdoor pixels don't evaluate them),
   // plus warm fills that dim to 0 when the hall is behind the camera.
