@@ -167,8 +167,10 @@ export async function start(): Promise<void> {
   const assets = new Assets();
 
   try {
-    const env = await createEnvironment(scene, assets, { shadows, now });
-    const scenery = await buildSpace(space.id, { scene, assets });
+    const [env, scenery] = await Promise.all([
+      createEnvironment(scene, assets, { shadows, now }),
+      buildSpace(space.id, { scene, assets }),
+    ]);
 
     registerCameraPreset("spawn", {
       position: [space.spawn.x, space.groundY(space.spawn.x, space.spawn.z) + CAMERA.height, space.spawn.z + CAMERA.distance],
