@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>2 · Khung game · Sân Tĩnh design</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="base.css">
+</head>
+<body>
+<div class="ds-page">
+<nav class="ds-nav"><a href="index.html">← Mục lục</a><a href="boot.html">boot</a><a href="game.html">game</a><a href="rooms.html">rooms</a><a href="beads.html">beads</a><a href="settings.html">settings</a><a href="people.html">people</a><a href="exit.html">exit</a><a href="rest.html">rest</a><a href="world-map.html">world-map</a></nav>
+<h1 class="ds-title">2 · Khung game</h1>
+<p class="ds-note">Canvas 3D toàn màn + HUD. Khối .scene/.monk chỉ là chỗ giữ — app thật vẽ bằng three.js. Gợi ý thao tác ẩn sau 8 s.</p>
+<span class="ds-label">MẶC ĐỊNH · đã kết nối, đêm, vừa vào (gợi ý hiện) — AC1, AC5</span>
+<section class="ds-frame">
+  <div class="scene"></div>
+  <div class="hud hud-top-left">
+    <button class="tool tool-circle glass" aria-label="Rời Sân Tĩnh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 8l-4 4 4 4M6 12h10"/></svg></button>
+    <button class="room-pill glass" aria-label="Phòng 3. Chọn phòng"><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5c4-.6 7-3 9-6 2 3 5 5.4 9 6M5 11.5h14M7.5 12v7.5m9-7.5v7.5M4.5 19.5h15M10.5 14.5h3v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/></svg></span><strong class="pill-brand">Sân Tĩnh</strong><small>Phòng 3</small><span class="status-dot "></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></button>
+  </div>
+  <div class="hud hud-top-right">
+    <div class="tool-group glass">
+      <button class="tool tool-circle hide-mobile" aria-label="Cúng dường (sắp có)" disabled style="opacity:.45"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16v9H4zM3 7h18v4H3zM12 7v13M12 7c-2-4-6-3-5 0m5 0c2-4 6-3 5 0"/></svg></button>
+      <button class="tool" aria-label="4 người đang ở đây. Xem ai đang ở đây"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M21 20v-2a6 6 0 0 0-3-5"/></svg><span>4</span></button>
+      <button class="tool tool-circle" aria-label="Bật tiếng"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 5-5 4H2v6h3l5 4V5Z"/><path d="m16 9 5 6m0-6-5 6"/></svg></button>
+      <button class="tool tool-circle" aria-label="Cài đặt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="currentColor"/><circle cx="15" cy="17" r="2" fill="currentColor"/></svg></button>
+    </div>
+    <button class="chip" aria-pressed="false">Nghe tụng kinh</button>
+  </div>
+  <div class="hud hud-bottom">
+    <div class="action-bar glass" role="toolbar" aria-label="Việc có thể làm">
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V6.5a1.5 1.5 0 0 0-3 0L7 13l-2 3 3 5h4Zm0 0V6.5a1.5 1.5 0 0 1 3 0L17 13l2 3-3 5h-4"/></svg><span>Chắp tay</span><kbd>3</kbd></button>
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="6" r="2.5"/><path d="M5 20c0-4 3-7 7-7s7 3 7 7M8 20h8"/></svg><span>Lạy</span><kbd>1</kbd></button>
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="1.6"/><circle cx="17.3" cy="6.7" r="1.6"/><circle cx="19.5" cy="12" r="1.6"/><circle cx="17.3" cy="17.3" r="1.6"/><circle cx="6.7" cy="6.7" r="1.6"/><circle cx="4.5" cy="12" r="1.6"/><circle cx="6.7" cy="17.3" r="1.6"/><path d="M12 17v4"/></svg><span>Tràng hạt</span><kbd>2</kbd></button>
+    </div>
+  </div>
+  <div class="hud hud-hint"><div class="hint"><span class="only-pointer">Bấm xuống sàn hoặc WASD để đi · kéo để nhìn quanh · cuộn để phóng to/thu nhỏ</span><span class="only-touch">Chạm để đi · vuốt nhìn quanh · 2 ngón phóng to</span></div></div>
+  <span class="monk " style="left:50%;top:78%"></span>
+  <span class="nametag" style="left:50%;top:calc(78% - 158px)"><i>Bạn</i>Gió Lặng</span>
+  <span class="monk " style="left:72%;top:70%"></span>
+  <span class="nametag nametag--other" style="left:72%;top:calc(70% - 158px)">Sóng Ấm</span>
+  <span class="monk monk--far" style="left:30%;top:58%"></span>
+  <span class="nametag nametag--other" style="left:30%;top:calc(58% - 92px)">Lá Thông</span>
+</section>
+<span class="ds-label">TRẠNG THÁI · đang đi (nút Dừng nổi) — AC3, AC4</span>
+<section class="ds-frame">
+  <div class="scene"></div>
+  <div class="hud hud-top-left">
+    <button class="tool tool-circle glass" aria-label="Rời Sân Tĩnh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 8l-4 4 4 4M6 12h10"/></svg></button>
+    <button class="room-pill glass" aria-label="Phòng 3. Chọn phòng"><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5c4-.6 7-3 9-6 2 3 5 5.4 9 6M5 11.5h14M7.5 12v7.5m9-7.5v7.5M4.5 19.5h15M10.5 14.5h3v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/></svg></span><strong class="pill-brand">Sân Tĩnh</strong><small>Phòng 3</small><span class="status-dot "></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></button>
+  </div>
+  <div class="hud hud-top-right">
+    <div class="tool-group glass">
+      <button class="tool tool-circle hide-mobile" aria-label="Cúng dường (sắp có)" disabled style="opacity:.45"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16v9H4zM3 7h18v4H3zM12 7v13M12 7c-2-4-6-3-5 0m5 0c2-4 6-3 5 0"/></svg></button>
+      <button class="tool" aria-label="4 người đang ở đây. Xem ai đang ở đây"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M21 20v-2a6 6 0 0 0-3-5"/></svg><span>4</span></button>
+      <button class="tool tool-circle" aria-label="Tắt tiếng"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 5-5 4H2v6h3l5 4V5Z"/><path d="M14.5 8.5a5 5 0 0 1 0 7M17.5 5.5a9 9 0 0 1 0 13"/></svg></button>
+      <button class="tool tool-circle" aria-label="Cài đặt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="currentColor"/><circle cx="15" cy="17" r="2" fill="currentColor"/></svg></button>
+    </div>
+    <button class="chip" aria-pressed="false">Nghe tụng kinh</button>
+  </div>
+  <div class="hud hud-bottom">
+    <div class="action-bar glass" role="toolbar" aria-label="Việc có thể làm">
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V6.5a1.5 1.5 0 0 0-3 0L7 13l-2 3 3 5h4Zm0 0V6.5a1.5 1.5 0 0 1 3 0L17 13l2 3-3 5h-4"/></svg><span>Chắp tay</span><kbd>3</kbd></button>
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="6" r="2.5"/><path d="M5 20c0-4 3-7 7-7s7 3 7 7M8 20h8"/></svg><span>Lạy</span><kbd>1</kbd></button>
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="1.6"/><circle cx="17.3" cy="6.7" r="1.6"/><circle cx="19.5" cy="12" r="1.6"/><circle cx="17.3" cy="17.3" r="1.6"/><circle cx="6.7" cy="6.7" r="1.6"/><circle cx="4.5" cy="12" r="1.6"/><circle cx="6.7" cy="17.3" r="1.6"/><path d="M12 17v4"/></svg><span>Tràng hạt</span><kbd>2</kbd></button>
+    </div>
+  </div>
+  <span class="monk " style="left:50%;top:78%"></span>
+  <span class="nametag" style="left:50%;top:calc(78% - 158px)"><i>Bạn</i>Gió Lặng</span>
+  <span class="monk " style="left:72%;top:70%"></span>
+  <span class="nametag nametag--other" style="left:72%;top:calc(70% - 158px)">Sóng Ấm</span>
+  <span class="monk monk--far" style="left:30%;top:58%"></span>
+  <span class="nametag nametag--other" style="left:30%;top:calc(58% - 92px)">Lá Thông</span>
+  <button class="chip walk-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2"/></svg>Đang đi · Dừng</button>
+</section>
+<span class="ds-label">TRẠNG THÁI · đang lạy trên đệm (Lạy → Dừng) — AC8, AC9</span>
+<section class="ds-frame">
+  <div class="scene"></div>
+  <div class="hud hud-top-left">
+    <button class="tool tool-circle glass" aria-label="Rời Sân Tĩnh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 8l-4 4 4 4M6 12h10"/></svg></button>
+    <button class="room-pill glass" aria-label="Phòng 3. Chọn phòng"><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5c4-.6 7-3 9-6 2 3 5 5.4 9 6M5 11.5h14M7.5 12v7.5m9-7.5v7.5M4.5 19.5h15M10.5 14.5h3v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/></svg></span><strong class="pill-brand">Sân Tĩnh</strong><small>Phòng 3</small><span class="status-dot "></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></button>
+  </div>
+  <div class="hud hud-top-right">
+    <div class="tool-group glass">
+      <button class="tool tool-circle hide-mobile" aria-label="Cúng dường (sắp có)" disabled style="opacity:.45"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16v9H4zM3 7h18v4H3zM12 7v13M12 7c-2-4-6-3-5 0m5 0c2-4 6-3 5 0"/></svg></button>
+      <button class="tool" aria-label="4 người đang ở đây. Xem ai đang ở đây"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M21 20v-2a6 6 0 0 0-3-5"/></svg><span>4</span></button>
+      <button class="tool tool-circle" aria-label="Tắt tiếng"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 5-5 4H2v6h3l5 4V5Z"/><path d="M14.5 8.5a5 5 0 0 1 0 7M17.5 5.5a9 9 0 0 1 0 13"/></svg></button>
+      <button class="tool tool-circle" aria-label="Cài đặt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="currentColor"/><circle cx="15" cy="17" r="2" fill="currentColor"/></svg></button>
+    </div>
+    <button class="chip" aria-pressed="false">Nghe tụng kinh</button>
+  </div>
+  <div class="hud hud-bottom">
+    <div class="action-bar glass" role="toolbar" aria-label="Việc có thể làm">
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V6.5a1.5 1.5 0 0 0-3 0L7 13l-2 3 3 5h4Zm0 0V6.5a1.5 1.5 0 0 1 3 0L17 13l2 3-3 5h-4"/></svg><span>Chắp tay</span><kbd>3</kbd></button>
+      <button class="action" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="6" r="2.5"/><path d="M5 20c0-4 3-7 7-7s7 3 7 7M8 20h8"/></svg><span>Dừng</span><kbd>1</kbd></button>
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="1.6"/><circle cx="17.3" cy="6.7" r="1.6"/><circle cx="19.5" cy="12" r="1.6"/><circle cx="17.3" cy="17.3" r="1.6"/><circle cx="6.7" cy="6.7" r="1.6"/><circle cx="4.5" cy="12" r="1.6"/><circle cx="6.7" cy="17.3" r="1.6"/><path d="M12 17v4"/></svg><span>Tràng hạt</span><kbd>2</kbd></button>
+    </div>
+  </div>
+  <span class="monk monk--kneel" style="left:50%;top:80%"></span>
+  <span class="nametag" style="left:50%;top:calc(80% - 158px)"><i>Bạn</i>Gió Lặng</span>
+  <span class="monk " style="left:72%;top:70%"></span>
+  <span class="nametag nametag--other" style="left:72%;top:calc(70% - 158px)">Sóng Ấm</span>
+  <span class="monk monk--far" style="left:30%;top:58%"></span>
+  <span class="nametag nametag--other" style="left:30%;top:calc(58% - 92px)">Lá Thông</span>
+  <div class="toasts" role="status"><div class="toast ">Đang lạy · bấm lần nữa để đứng dậy</div></div>
+</section>
+<span class="ds-label">TRẠNG THÁI · người khác chắp tay chào (toast) — AC6</span>
+<section class="ds-frame">
+  <div class="scene"></div>
+  <div class="hud hud-top-left">
+    <button class="tool tool-circle glass" aria-label="Rời Sân Tĩnh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 8l-4 4 4 4M6 12h10"/></svg></button>
+    <button class="room-pill glass" aria-label="Phòng 3. Chọn phòng"><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5c4-.6 7-3 9-6 2 3 5 5.4 9 6M5 11.5h14M7.5 12v7.5m9-7.5v7.5M4.5 19.5h15M10.5 14.5h3v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/></svg></span><strong class="pill-brand">Sân Tĩnh</strong><small>Phòng 3</small><span class="status-dot "></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></button>
+  </div>
+  <div class="hud hud-top-right">
+    <div class="tool-group glass">
+      <button class="tool tool-circle hide-mobile" aria-label="Cúng dường (sắp có)" disabled style="opacity:.45"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16v9H4zM3 7h18v4H3zM12 7v13M12 7c-2-4-6-3-5 0m5 0c2-4 6-3 5 0"/></svg></button>
+      <button class="tool" aria-label="5 người đang ở đây. Xem ai đang ở đây"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M21 20v-2a6 6 0 0 0-3-5"/></svg><span>5</span></button>
+      <button class="tool tool-circle" aria-label="Tắt tiếng"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 5-5 4H2v6h3l5 4V5Z"/><path d="M14.5 8.5a5 5 0 0 1 0 7M17.5 5.5a9 9 0 0 1 0 13"/></svg></button>
+      <button class="tool tool-circle" aria-label="Cài đặt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="currentColor"/><circle cx="15" cy="17" r="2" fill="currentColor"/></svg></button>
+    </div>
+    <button class="chip" aria-pressed="false">Nghe tụng kinh</button>
+  </div>
+  <div class="hud hud-bottom">
+    <div class="action-bar glass" role="toolbar" aria-label="Việc có thể làm">
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V6.5a1.5 1.5 0 0 0-3 0L7 13l-2 3 3 5h4Zm0 0V6.5a1.5 1.5 0 0 1 3 0L17 13l2 3-3 5h-4"/></svg><span>Chắp tay</span><kbd>3</kbd></button>
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="6" r="2.5"/><path d="M5 20c0-4 3-7 7-7s7 3 7 7M8 20h8"/></svg><span>Lạy</span><kbd>1</kbd></button>
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="1.6"/><circle cx="17.3" cy="6.7" r="1.6"/><circle cx="19.5" cy="12" r="1.6"/><circle cx="17.3" cy="17.3" r="1.6"/><circle cx="6.7" cy="6.7" r="1.6"/><circle cx="4.5" cy="12" r="1.6"/><circle cx="6.7" cy="17.3" r="1.6"/><path d="M12 17v4"/></svg><span>Tràng hạt</span><kbd>2</kbd></button>
+    </div>
+  </div>
+  <span class="monk " style="left:50%;top:78%"></span>
+  <span class="nametag" style="left:50%;top:calc(78% - 158px)"><i>Bạn</i>Gió Lặng</span>
+  <span class="monk " style="left:72%;top:70%"></span>
+  <span class="nametag nametag--other" style="left:72%;top:calc(70% - 158px)">Sóng Ấm</span>
+  <span class="monk monk--far" style="left:30%;top:58%"></span>
+  <span class="nametag nametag--other" style="left:30%;top:calc(58% - 92px)">Lá Thông</span>
+  <div class="toasts" role="status"><div class="toast ">Sóng Ấm chắp tay chào bạn</div></div>
+</section>
+<span class="ds-label">TRẠNG THÁI · mình chắp tay (Chắp tay sáng 2 s)</span>
+<section class="ds-frame">
+  <div class="scene"></div>
+  <div class="hud hud-top-left">
+    <button class="tool tool-circle glass" aria-label="Rời Sân Tĩnh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 8l-4 4 4 4M6 12h10"/></svg></button>
+    <button class="room-pill glass" aria-label="Phòng 3. Chọn phòng"><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5c4-.6 7-3 9-6 2 3 5 5.4 9 6M5 11.5h14M7.5 12v7.5m9-7.5v7.5M4.5 19.5h15M10.5 14.5h3v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/></svg></span><strong class="pill-brand">Sân Tĩnh</strong><small>Phòng 3</small><span class="status-dot "></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></button>
+  </div>
+  <div class="hud hud-top-right">
+    <div class="tool-group glass">
+      <button class="tool tool-circle hide-mobile" aria-label="Cúng dường (sắp có)" disabled style="opacity:.45"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16v9H4zM3 7h18v4H3zM12 7v13M12 7c-2-4-6-3-5 0m5 0c2-4 6-3 5 0"/></svg></button>
+      <button class="tool" aria-label="4 người đang ở đây. Xem ai đang ở đây"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M21 20v-2a6 6 0 0 0-3-5"/></svg><span>4</span></button>
+      <button class="tool tool-circle" aria-label="Tắt tiếng"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 5-5 4H2v6h3l5 4V5Z"/><path d="M14.5 8.5a5 5 0 0 1 0 7M17.5 5.5a9 9 0 0 1 0 13"/></svg></button>
+      <button class="tool tool-circle" aria-label="Cài đặt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="currentColor"/><circle cx="15" cy="17" r="2" fill="currentColor"/></svg></button>
+    </div>
+    <button class="chip" aria-pressed="false">Nghe tụng kinh</button>
+  </div>
+  <div class="hud hud-bottom">
+    <div class="action-bar glass" role="toolbar" aria-label="Việc có thể làm">
+      <button class="action" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V6.5a1.5 1.5 0 0 0-3 0L7 13l-2 3 3 5h4Zm0 0V6.5a1.5 1.5 0 0 1 3 0L17 13l2 3-3 5h-4"/></svg><span>Chắp tay</span><kbd>3</kbd></button>
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="6" r="2.5"/><path d="M5 20c0-4 3-7 7-7s7 3 7 7M8 20h8"/></svg><span>Lạy</span><kbd>1</kbd></button>
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="1.6"/><circle cx="17.3" cy="6.7" r="1.6"/><circle cx="19.5" cy="12" r="1.6"/><circle cx="17.3" cy="17.3" r="1.6"/><circle cx="6.7" cy="6.7" r="1.6"/><circle cx="4.5" cy="12" r="1.6"/><circle cx="6.7" cy="17.3" r="1.6"/><path d="M12 17v4"/></svg><span>Tràng hạt</span><kbd>2</kbd></button>
+    </div>
+  </div>
+  <span class="monk " style="left:50%;top:78%"></span>
+  <span class="nametag" style="left:50%;top:calc(78% - 158px)"><i>Bạn</i>Gió Lặng</span>
+  <span class="monk " style="left:72%;top:70%"></span>
+  <span class="nametag nametag--other" style="left:72%;top:calc(70% - 158px)">Sóng Ấm</span>
+  <span class="monk monk--far" style="left:30%;top:58%"></span>
+  <span class="nametag nametag--other" style="left:30%;top:calc(58% - 92px)">Lá Thông</span>
+  <div class="toasts" role="status"><div class="toast ">Bạn đã chắp tay chào mọi người</div></div>
+</section>
+<span class="ds-label">TRẠNG THÁI · đang kết nối (vào lần đầu, lạy bị khoá)</span>
+<section class="ds-frame">
+  <div class="scene"></div>
+  <div class="hud hud-top-left">
+    <button class="tool tool-circle glass" aria-label="Rời Sân Tĩnh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 8l-4 4 4 4M6 12h10"/></svg></button>
+    <button class="room-pill glass" aria-label="Phòng 3. Chọn phòng"><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5c4-.6 7-3 9-6 2 3 5 5.4 9 6M5 11.5h14M7.5 12v7.5m9-7.5v7.5M4.5 19.5h15M10.5 14.5h3v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/></svg></span><strong class="pill-brand">Sân Tĩnh</strong><small>Phòng 3</small><span class="status-dot status-dot--connecting"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></button>
+  </div>
+  <div class="hud hud-top-right">
+    <div class="tool-group glass">
+      <button class="tool tool-circle hide-mobile" aria-label="Cúng dường (sắp có)" disabled style="opacity:.45"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16v9H4zM3 7h18v4H3zM12 7v13M12 7c-2-4-6-3-5 0m5 0c2-4 6-3 5 0"/></svg></button>
+      <button class="tool" aria-label="Đang kết nối. Xem ai đang ở đây"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M21 20v-2a6 6 0 0 0-3-5"/></svg><span>…</span></button>
+      <button class="tool tool-circle" aria-label="Bật tiếng"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 5-5 4H2v6h3l5 4V5Z"/><path d="m16 9 5 6m0-6-5 6"/></svg></button>
+      <button class="tool tool-circle" aria-label="Cài đặt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="currentColor"/><circle cx="15" cy="17" r="2" fill="currentColor"/></svg></button>
+    </div>
+    <button class="chip" aria-pressed="false">Nghe tụng kinh</button>
+  </div>
+  <div class="hud hud-bottom">
+    <div class="action-bar glass" role="toolbar" aria-label="Việc có thể làm">
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V6.5a1.5 1.5 0 0 0-3 0L7 13l-2 3 3 5h4Zm0 0V6.5a1.5 1.5 0 0 1 3 0L17 13l2 3-3 5h-4"/></svg><span>Chắp tay</span><kbd>3</kbd></button>
+      <button class="action" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="6" r="2.5"/><path d="M5 20c0-4 3-7 7-7s7 3 7 7M8 20h8"/></svg><span>Lạy</span><kbd>1</kbd></button>
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="1.6"/><circle cx="17.3" cy="6.7" r="1.6"/><circle cx="19.5" cy="12" r="1.6"/><circle cx="17.3" cy="17.3" r="1.6"/><circle cx="6.7" cy="6.7" r="1.6"/><circle cx="4.5" cy="12" r="1.6"/><circle cx="6.7" cy="17.3" r="1.6"/><path d="M12 17v4"/></svg><span>Tràng hạt</span><kbd>2</kbd></button>
+    </div>
+  </div>
+  <span class="monk " style="left:50%;top:78%"></span>
+  <span class="nametag" style="left:50%;top:calc(78% - 158px)"><i>Bạn</i>Gió Lặng</span>
+  <div class="toasts" role="status"><div class="toast ">Đang kết nối vào Sân Tĩnh</div></div>
+</section>
+<span class="ds-label">TRẠNG THÁI · mất kết nối, đang nối lại — AC14</span>
+<section class="ds-frame">
+  <div class="scene"></div>
+  <div class="hud hud-top-left">
+    <button class="tool tool-circle glass" aria-label="Rời Sân Tĩnh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 8l-4 4 4 4M6 12h10"/></svg></button>
+    <button class="room-pill glass" aria-label="Phòng 3. Chọn phòng"><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5c4-.6 7-3 9-6 2 3 5 5.4 9 6M5 11.5h14M7.5 12v7.5m9-7.5v7.5M4.5 19.5h15M10.5 14.5h3v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/></svg></span><strong class="pill-brand">Sân Tĩnh</strong><small>Phòng 3</small><span class="status-dot status-dot--off"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></button>
+  </div>
+  <div class="hud hud-top-right">
+    <div class="tool-group glass">
+      <button class="tool tool-circle hide-mobile" aria-label="Cúng dường (sắp có)" disabled style="opacity:.45"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16v9H4zM3 7h18v4H3zM12 7v13M12 7c-2-4-6-3-5 0m5 0c2-4 6-3 5 0"/></svg></button>
+      <button class="tool" aria-label="Mất kết nối. Xem ai đang ở đây"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M21 20v-2a6 6 0 0 0-3-5"/></svg><span>…</span></button>
+      <button class="tool tool-circle" aria-label="Bật tiếng"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 5-5 4H2v6h3l5 4V5Z"/><path d="m16 9 5 6m0-6-5 6"/></svg></button>
+      <button class="tool tool-circle" aria-label="Cài đặt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="currentColor"/><circle cx="15" cy="17" r="2" fill="currentColor"/></svg></button>
+    </div>
+    <button class="chip" aria-pressed="false">Nghe tụng kinh</button>
+  </div>
+  <div class="hud hud-bottom">
+    <div class="action-bar glass" role="toolbar" aria-label="Việc có thể làm">
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V6.5a1.5 1.5 0 0 0-3 0L7 13l-2 3 3 5h4Zm0 0V6.5a1.5 1.5 0 0 1 3 0L17 13l2 3-3 5h-4"/></svg><span>Chắp tay</span><kbd>3</kbd></button>
+      <button class="action" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="6" r="2.5"/><path d="M5 20c0-4 3-7 7-7s7 3 7 7M8 20h8"/></svg><span>Lạy</span><kbd>1</kbd></button>
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="1.6"/><circle cx="17.3" cy="6.7" r="1.6"/><circle cx="19.5" cy="12" r="1.6"/><circle cx="17.3" cy="17.3" r="1.6"/><circle cx="6.7" cy="6.7" r="1.6"/><circle cx="4.5" cy="12" r="1.6"/><circle cx="6.7" cy="17.3" r="1.6"/><path d="M12 17v4"/></svg><span>Tràng hạt</span><kbd>2</kbd></button>
+    </div>
+  </div>
+  <span class="monk " style="left:50%;top:78%"></span>
+  <span class="nametag" style="left:50%;top:calc(78% - 158px)"><i>Bạn</i>Gió Lặng</span>
+  <div class="toasts" role="status"><div class="toast toast--warn">Mất kết nối. Đang kết nối lại</div></div>
+</section>
+<span class="ds-label">TRẠNG THÁI · phòng đầy — AC13 (mở dialog chọn phòng, xem rooms.html)</span>
+<section class="ds-frame">
+  <div class="scene"></div>
+  <div class="hud hud-top-left">
+    <button class="tool tool-circle glass" aria-label="Rời Sân Tĩnh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 8l-4 4 4 4M6 12h10"/></svg></button>
+    <button class="room-pill glass" aria-label="Phòng 7. Chọn phòng"><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5c4-.6 7-3 9-6 2 3 5 5.4 9 6M5 11.5h14M7.5 12v7.5m9-7.5v7.5M4.5 19.5h15M10.5 14.5h3v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/></svg></span><strong class="pill-brand">Sân Tĩnh</strong><small>Phòng 7</small><span class="status-dot status-dot--off"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></button>
+  </div>
+  <div class="hud hud-top-right">
+    <div class="tool-group glass">
+      <button class="tool tool-circle hide-mobile" aria-label="Cúng dường (sắp có)" disabled style="opacity:.45"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16v9H4zM3 7h18v4H3zM12 7v13M12 7c-2-4-6-3-5 0m5 0c2-4 6-3 5 0"/></svg></button>
+      <button class="tool" aria-label="Mất kết nối. Xem ai đang ở đây"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M21 20v-2a6 6 0 0 0-3-5"/></svg><span>…</span></button>
+      <button class="tool tool-circle" aria-label="Bật tiếng"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 5-5 4H2v6h3l5 4V5Z"/><path d="m16 9 5 6m0-6-5 6"/></svg></button>
+      <button class="tool tool-circle" aria-label="Cài đặt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="currentColor"/><circle cx="15" cy="17" r="2" fill="currentColor"/></svg></button>
+    </div>
+    <button class="chip" aria-pressed="false">Nghe tụng kinh</button>
+  </div>
+  <div class="hud hud-bottom">
+    <div class="action-bar glass" role="toolbar" aria-label="Việc có thể làm">
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V6.5a1.5 1.5 0 0 0-3 0L7 13l-2 3 3 5h4Zm0 0V6.5a1.5 1.5 0 0 1 3 0L17 13l2 3-3 5h-4"/></svg><span>Chắp tay</span><kbd>3</kbd></button>
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="6" r="2.5"/><path d="M5 20c0-4 3-7 7-7s7 3 7 7M8 20h8"/></svg><span>Lạy</span><kbd>1</kbd></button>
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="1.6"/><circle cx="17.3" cy="6.7" r="1.6"/><circle cx="19.5" cy="12" r="1.6"/><circle cx="17.3" cy="17.3" r="1.6"/><circle cx="6.7" cy="6.7" r="1.6"/><circle cx="4.5" cy="12" r="1.6"/><circle cx="6.7" cy="17.3" r="1.6"/><path d="M12 17v4"/></svg><span>Tràng hạt</span><kbd>2</kbd></button>
+    </div>
+  </div>
+  <span class="monk " style="left:50%;top:78%"></span>
+  <span class="nametag" style="left:50%;top:calc(78% - 158px)"><i>Bạn</i>Gió Lặng</span>
+  <div class="toasts" role="status"><div class="toast toast--error">Phòng này đã đủ người. Hãy chọn phòng khác.</div></div>
+</section>
+<span class="ds-label">TRẠNG THÁI · lỗi thao tác (bấm chỗ không đi được / hết đệm)</span>
+<section class="ds-frame">
+  <div class="scene"></div>
+  <div class="hud hud-top-left">
+    <button class="tool tool-circle glass" aria-label="Rời Sân Tĩnh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 8l-4 4 4 4M6 12h10"/></svg></button>
+    <button class="room-pill glass" aria-label="Phòng 3. Chọn phòng"><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5c4-.6 7-3 9-6 2 3 5 5.4 9 6M5 11.5h14M7.5 12v7.5m9-7.5v7.5M4.5 19.5h15M10.5 14.5h3v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/></svg></span><strong class="pill-brand">Sân Tĩnh</strong><small>Phòng 3</small><span class="status-dot "></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></button>
+  </div>
+  <div class="hud hud-top-right">
+    <div class="tool-group glass">
+      <button class="tool tool-circle hide-mobile" aria-label="Cúng dường (sắp có)" disabled style="opacity:.45"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16v9H4zM3 7h18v4H3zM12 7v13M12 7c-2-4-6-3-5 0m5 0c2-4 6-3 5 0"/></svg></button>
+      <button class="tool" aria-label="4 người đang ở đây. Xem ai đang ở đây"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M21 20v-2a6 6 0 0 0-3-5"/></svg><span>4</span></button>
+      <button class="tool tool-circle" aria-label="Tắt tiếng"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 5-5 4H2v6h3l5 4V5Z"/><path d="M14.5 8.5a5 5 0 0 1 0 7M17.5 5.5a9 9 0 0 1 0 13"/></svg></button>
+      <button class="tool tool-circle" aria-label="Cài đặt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="currentColor"/><circle cx="15" cy="17" r="2" fill="currentColor"/></svg></button>
+    </div>
+    <button class="chip" aria-pressed="false">Nghe tụng kinh</button>
+  </div>
+  <div class="hud hud-bottom">
+    <div class="action-bar glass" role="toolbar" aria-label="Việc có thể làm">
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V6.5a1.5 1.5 0 0 0-3 0L7 13l-2 3 3 5h4Zm0 0V6.5a1.5 1.5 0 0 1 3 0L17 13l2 3-3 5h-4"/></svg><span>Chắp tay</span><kbd>3</kbd></button>
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="6" r="2.5"/><path d="M5 20c0-4 3-7 7-7s7 3 7 7M8 20h8"/></svg><span>Lạy</span><kbd>1</kbd></button>
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="1.6"/><circle cx="17.3" cy="6.7" r="1.6"/><circle cx="19.5" cy="12" r="1.6"/><circle cx="17.3" cy="17.3" r="1.6"/><circle cx="6.7" cy="6.7" r="1.6"/><circle cx="4.5" cy="12" r="1.6"/><circle cx="6.7" cy="17.3" r="1.6"/><path d="M12 17v4"/></svg><span>Tràng hạt</span><kbd>2</kbd></button>
+    </div>
+  </div>
+  <span class="monk " style="left:50%;top:78%"></span>
+  <span class="nametag" style="left:50%;top:calc(78% - 158px)"><i>Bạn</i>Gió Lặng</span>
+  <span class="monk " style="left:72%;top:70%"></span>
+  <span class="nametag nametag--other" style="left:72%;top:calc(70% - 158px)">Sóng Ấm</span>
+  <span class="monk monk--far" style="left:30%;top:58%"></span>
+  <span class="nametag nametag--other" style="left:30%;top:calc(58% - 92px)">Lá Thông</span>
+  <div class="toasts" role="status"><div class="toast toast--warn">Hãy bấm vào khoảng sàn trống gần hơn</div><div class="toast toast--warn">Không còn bồ đoàn trống. Đi dạo một chút rồi thử lại nhé.</div></div>
+</section>
+<span class="ds-label">P1 · giờ khóa lễ chung (05:00 / 18:00 giờ VN) + đang nghe riêng, ban ngày</span>
+<section class="ds-frame">
+  <div class="scene scene--day"></div>
+  <div class="hud hud-top-left">
+    <button class="tool tool-circle glass" aria-label="Rời Sân Tĩnh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 8l-4 4 4 4M6 12h10"/></svg></button>
+    <button class="room-pill glass" aria-label="Phòng 3. Chọn phòng"><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5c4-.6 7-3 9-6 2 3 5 5.4 9 6M5 11.5h14M7.5 12v7.5m9-7.5v7.5M4.5 19.5h15M10.5 14.5h3v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/></svg></span><strong class="pill-brand">Sân Tĩnh</strong><small>Phòng 3</small><span class="status-dot "></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></button>
+  </div>
+  <div class="hud hud-top-right">
+    <div class="tool-group glass">
+      <button class="tool tool-circle hide-mobile" aria-label="Cúng dường (sắp có)" disabled style="opacity:.45"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16v9H4zM3 7h18v4H3zM12 7v13M12 7c-2-4-6-3-5 0m5 0c2-4 6-3 5 0"/></svg></button>
+      <button class="tool" aria-label="4 người đang ở đây. Xem ai đang ở đây"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M21 20v-2a6 6 0 0 0-3-5"/></svg><span>4</span></button>
+      <button class="tool tool-circle" aria-label="Tắt tiếng"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 5-5 4H2v6h3l5 4V5Z"/><path d="M14.5 8.5a5 5 0 0 1 0 7M17.5 5.5a9 9 0 0 1 0 13"/></svg></button>
+      <button class="tool tool-circle" aria-label="Cài đặt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="currentColor"/><circle cx="15" cy="17" r="2" fill="currentColor"/></svg></button>
+    </div>
+    <span class="chip chip--banner">Khóa lễ sáng · đang nghe cùng mọi người</span><button class="chip" aria-pressed="true">Dừng tụng kinh</button>
+  </div>
+  <div class="hud hud-bottom">
+    <div class="action-bar glass" role="toolbar" aria-label="Việc có thể làm">
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V6.5a1.5 1.5 0 0 0-3 0L7 13l-2 3 3 5h4Zm0 0V6.5a1.5 1.5 0 0 1 3 0L17 13l2 3-3 5h-4"/></svg><span>Chắp tay</span><kbd>3</kbd></button>
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="6" r="2.5"/><path d="M5 20c0-4 3-7 7-7s7 3 7 7M8 20h8"/></svg><span>Lạy</span><kbd>1</kbd></button>
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="1.6"/><circle cx="17.3" cy="6.7" r="1.6"/><circle cx="19.5" cy="12" r="1.6"/><circle cx="17.3" cy="17.3" r="1.6"/><circle cx="6.7" cy="6.7" r="1.6"/><circle cx="4.5" cy="12" r="1.6"/><circle cx="6.7" cy="17.3" r="1.6"/><path d="M12 17v4"/></svg><span>Tràng hạt</span><kbd>2</kbd></button>
+    </div>
+  </div>
+  <span class="monk " style="left:50%;top:78%"></span>
+  <span class="nametag" style="left:50%;top:calc(78% - 158px)"><i>Bạn</i>Gió Lặng</span>
+  <span class="monk " style="left:72%;top:70%"></span>
+  <span class="nametag nametag--other" style="left:72%;top:calc(70% - 158px)">Sóng Ấm</span>
+  <span class="monk monk--far" style="left:30%;top:58%"></span>
+  <span class="nametag nametag--other" style="left:30%;top:calc(58% - 92px)">Lá Thông</span>
+</section>
+<span class="ds-label">P1 · tràng hạt vòng mới (toast trên game sau khi đóng màn tràng hạt)</span>
+<section class="ds-frame">
+  <div class="scene"></div>
+  <div class="hud hud-top-left">
+    <button class="tool tool-circle glass" aria-label="Rời Sân Tĩnh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 8l-4 4 4 4M6 12h10"/></svg></button>
+    <button class="room-pill glass" aria-label="Phòng 3. Chọn phòng"><span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5c4-.6 7-3 9-6 2 3 5 5.4 9 6M5 11.5h14M7.5 12v7.5m9-7.5v7.5M4.5 19.5h15M10.5 14.5h3v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/></svg></span><strong class="pill-brand">Sân Tĩnh</strong><small>Phòng 3</small><span class="status-dot "></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></button>
+  </div>
+  <div class="hud hud-top-right">
+    <div class="tool-group glass">
+      <button class="tool tool-circle hide-mobile" aria-label="Cúng dường (sắp có)" disabled style="opacity:.45"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16v9H4zM3 7h18v4H3zM12 7v13M12 7c-2-4-6-3-5 0m5 0c2-4 6-3 5 0"/></svg></button>
+      <button class="tool" aria-label="4 người đang ở đây. Xem ai đang ở đây"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M21 20v-2a6 6 0 0 0-3-5"/></svg><span>4</span></button>
+      <button class="tool tool-circle" aria-label="Tắt tiếng"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 5-5 4H2v6h3l5 4V5Z"/><path d="M14.5 8.5a5 5 0 0 1 0 7M17.5 5.5a9 9 0 0 1 0 13"/></svg></button>
+      <button class="tool tool-circle" aria-label="Cài đặt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="currentColor"/><circle cx="15" cy="17" r="2" fill="currentColor"/></svg></button>
+    </div>
+    <button class="chip" aria-pressed="false">Nghe tụng kinh</button>
+  </div>
+  <div class="hud hud-bottom">
+    <div class="action-bar glass" role="toolbar" aria-label="Việc có thể làm">
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V6.5a1.5 1.5 0 0 0-3 0L7 13l-2 3 3 5h4Zm0 0V6.5a1.5 1.5 0 0 1 3 0L17 13l2 3-3 5h-4"/></svg><span>Chắp tay</span><kbd>3</kbd></button>
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="6" r="2.5"/><path d="M5 20c0-4 3-7 7-7s7 3 7 7M8 20h8"/></svg><span>Lạy</span><kbd>1</kbd></button>
+      <button class="action" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="1.6"/><circle cx="17.3" cy="6.7" r="1.6"/><circle cx="19.5" cy="12" r="1.6"/><circle cx="17.3" cy="17.3" r="1.6"/><circle cx="6.7" cy="6.7" r="1.6"/><circle cx="4.5" cy="12" r="1.6"/><circle cx="6.7" cy="17.3" r="1.6"/><path d="M12 17v4"/></svg><span>Tràng hạt</span><kbd>2</kbd></button>
+    </div>
+  </div>
+  <span class="monk " style="left:50%;top:78%"></span>
+  <span class="nametag" style="left:50%;top:calc(78% - 158px)"><i>Bạn</i>Gió Lặng</span>
+  <span class="monk " style="left:72%;top:70%"></span>
+  <span class="nametag nametag--other" style="left:72%;top:calc(70% - 158px)">Sóng Ấm</span>
+  <span class="monk monk--far" style="left:30%;top:58%"></span>
+  <span class="nametag nametag--other" style="left:30%;top:calc(58% - 92px)">Lá Thông</span>
+  <div class="toasts" role="status"><div class="toast ">Đã lần xong 2 vòng</div></div>
+</section>
+</div>
+</body>
+</html>

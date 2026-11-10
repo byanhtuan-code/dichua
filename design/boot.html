@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>1 · Boot · Sân Tĩnh design</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="base.css">
+</head>
+<body>
+<div class="ds-page">
+<nav class="ds-nav"><a href="index.html">← Mục lục</a><a href="boot.html">boot</a><a href="game.html">game</a><a href="rooms.html">rooms</a><a href="beads.html">beads</a><a href="settings.html">settings</a><a href="people.html">people</a><a href="exit.html">exit</a><a href="rest.html">rest</a><a href="world-map.html">world-map</a></nav>
+<h1 class="ds-title">1 · Boot</h1>
+<p class="ds-note">Màn đầu khi tải model + texture. HTML tĩnh trong index.html của client (hiện trước khi JS chạy).</p>
+<span class="ds-label">TRẠNG THÁI · đang tải</span>
+<section class="ds-frame">
+  <div class="scene"></div>
+  <main class="overlay overlay--paper " role="status" aria-label="Sân Tĩnh">
+    <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5c4-.6 7-3 9-6 2 3 5 5.4 9 6M5 11.5h14M7.5 12v7.5m9-7.5v7.5M4.5 19.5h15M10.5 14.5h3v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/></svg></span>
+    <h1>Sân Tĩnh</h1>
+    <p>Đang mở cổng chùa</p>
+    <span class="breath" aria-hidden="true"></span>
+  </main>
+</section>
+<span class="ds-label">TRẠNG THÁI · tải chậm (sau 15 s hiện nút)</span>
+<section class="ds-frame">
+  <div class="scene"></div>
+  <main class="overlay overlay--paper " role="status" aria-label="Sân Tĩnh">
+    <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5c4-.6 7-3 9-6 2 3 5 5.4 9 6M5 11.5h14M7.5 12v7.5m9-7.5v7.5M4.5 19.5h15M10.5 14.5h3v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/></svg></span>
+    <h1>Sân Tĩnh</h1>
+    <p>Đang mở cổng chùa</p>
+    <span class="breath" aria-hidden="true"></span>
+    <a class="btn--link" href="" style="position:absolute;bottom:24px">Vào lại</a>
+  </main>
+</section>
+<span class="ds-label">TRẠNG THÁI · lỗi tải (AC2)</span>
+<section class="ds-frame">
+  <div class="scene"></div>
+  <main class="overlay overlay--paper " role="alert" aria-label="Sân Tĩnh">
+    <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5c4-.6 7-3 9-6 2 3 5 5.4 9 6M5 11.5h14M7.5 12v7.5m9-7.5v7.5M4.5 19.5h15M10.5 14.5h3v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/></svg></span>
+    <h1>Không tải được khung cảnh</h1>
+    <p>Kiểm tra kết nối rồi vào lại nhé</p>
+    <a class="btn" href="">Vào lại</a>
+  </main>
+</section>
+<span class="ds-label">TRẠNG THÁI · trình duyệt không hỗ trợ WebGL</span>
+<section class="ds-frame">
+  <div class="scene"></div>
+  <main class="overlay overlay--paper " role="status" aria-label="Sân Tĩnh">
+    <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5c4-.6 7-3 9-6 2 3 5 5.4 9 6M5 11.5h14M7.5 12v7.5m9-7.5v7.5M4.5 19.5h15M10.5 14.5h3v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/></svg></span>
+    <h1>Không mở được 3D</h1>
+    <p>Trình duyệt này không vẽ được cảnh 3D. Hãy mở lại bằng Chrome, Safari hoặc Edge bản mới.</p>
+  </main>
+</section>
+</div>
+</body>
+</html>

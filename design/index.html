@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mục lục · Sân Tĩnh design</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="base.css">
+<style>
+  table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+  th, td { padding: var(--space-2); border-bottom: 1px solid var(--color-glass-border); text-align: left; vertical-align: top; }
+  a, code { color: var(--color-lantern); }
+  h2 { margin: var(--space-10) 0 var(--space-3); font-size: var(--text-xl); font-weight: 400; }
+  .table-wrap { overflow-x: auto; }
+  .demo { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); padding: var(--space-4); border-radius: var(--radius-md); background: #3d4b4a; }
+  .demo--paper { background: var(--color-paper); color: var(--color-ink); }
+</style>
+</head>
+<body>
+<div class="ds-page">
+<h1 class="ds-title">Sân Tĩnh · design</h1>
+<p class="ds-note">Lớp UI phủ trên canvas 3D + bản đồ thế giới. Chữ UI tiếng Việt (D5). Phong cách UI giống gốc (D13): kính tối, màu đồng thau, số đo lấy từ CSS gốc. Font hệ thống (D12).</p>
+
+<h2>Màn</h2>
+<div class="table-wrap">
+<table>
+  <tr><th>#</th><th>Màn</th><th>File</th><th>P</th><th>AC</th></tr>
+  <tr><td>1</td><td>Boot</td><td><a href="boot.html">boot.html</a></td><td>P0</td><td>AC1, AC2</td></tr>
+  <tr><td>2</td><td>Khung game</td><td><a href="game.html">game.html</a></td><td>P0</td><td>AC1, AC3–AC9, AC13–AC15</td></tr>
+  <tr><td>3</td><td>Dialog chọn phòng</td><td><a href="rooms.html">rooms.html</a></td><td>P0</td><td>AC12, AC13</td></tr>
+  <tr><td>4</td><td>Màn tràng hạt</td><td><a href="beads.html">beads.html</a></td><td>P0</td><td>AC10, AC11</td></tr>
+  <tr><td>5</td><td>Dialog cài đặt</td><td><a href="settings.html">settings.html</a></td><td>P1</td><td>—</td></tr>
+  <tr><td>6</td><td>Dialog người cùng phòng</td><td><a href="people.html">people.html</a></td><td>P1</td><td>—</td></tr>
+  <tr><td>7</td><td>Màn thoát</td><td><a href="exit.html">exit.html</a></td><td>P1</td><td>—</td></tr>
+  <tr><td>8</td><td>Màn nghỉ</td><td><a href="rest.html">rest.html</a></td><td>P1</td><td>—</td></tr>
+  <tr><td>—</td><td>Bản đồ thế giới 3D</td><td><a href="world-map.html">world-map.html</a></td><td>P0</td><td>AC3, AC4, AC8 (toạ độ)</td></tr>
+</table>
+</div>
+
+<h2>Component (base.css)</h2>
+<div class="table-wrap">
+<table>
+  <tr><th>Class</th><th>Dùng cho</th></tr>
+  <tr><td><code>.glass</code></td><td>Nền mờ cho mọi khối HUD nổi trên canvas</td></tr>
+  <tr><td><code>.hud .hud-top-left / -top-right / -bottom / -hint</code></td><td>Vị trí 4 góc HUD (tôn trọng safe-area)</td></tr>
+  <tr><td><code>.tool .tool-circle .tool-group</code></td><td>Nút icon 44px (thoát, 👥, loa, ⚙)</td></tr>
+  <tr><td><code>.room-pill</code> + <code>.status-dot(--connecting|--off)</code></td><td>Pill tên + phòng + chấm trạng thái kết nối</td></tr>
+  <tr><td><code>.action-bar .action</code> (<code>aria-pressed</code>, <code>disabled</code>, <code>--soon</code>)</td><td>Thanh Chắp tay / Lạy / Tràng hạt</td></tr>
+  <tr><td><code>.chip (--banner) .walk-chip</code></td><td>Nút nhỏ "Nghe tụng kinh", banner khóa lễ, "Đang đi · Dừng"</td></tr>
+  <tr><td><code>.hint .toasts .toast(--warn|--error)</code></td><td>Gợi ý thao tác, thông báo</td></tr>
+  <tr><td><code>.nametag (--other)</code></td><td>Tên trên đầu (app thật: CSS2DObject / DOM theo toạ độ chiếu)</td></tr>
+  <tr><td><code>.overlay (--paper|--dark) .mark .breath</code></td><td>Boot, lỗi, thoát, nghỉ</td></tr>
+  <tr><td><code>.dialog-wrap .dialog .dialog-head .dialog-desc .dialog-bar .dialog-body .dialog-close</code></td><td>Dialog (mobile thành bottom sheet)</td></tr>
+  <tr><td><code>.list .row .row-main .row-meta .meter .swatch .badge(--accent|--danger|--soon)</code></td><td>Danh sách phòng / người</td></tr>
+  <tr><td><code>.skeleton .empty .error-box</code></td><td>Đang tải / rỗng / lỗi</td></tr>
+  <tr><td><code>.section .toggle .slider details</code></td><td>Cài đặt</td></tr>
+  <tr><td><code>.beads .bead(--current|--near|--far|--guru) .beads-count</code></td><td>Màn tràng hạt</td></tr>
+  <tr><td><code>.btn (--ghost|--link)</code></td><td>Nút chữ</td></tr>
+</table>
+</div>
+<p class="ds-note" style="margin-top:16px">Ví dụ:</p>
+<div class="demo">
+  <button class="btn">Vào lại</button><button class="btn btn--ghost">Nghe</button><button class="chip glass" aria-pressed="false">Nghe tụng kinh</button><button class="chip glass" aria-pressed="true">Dừng tụng kinh</button><span class="chip chip--banner">Khóa lễ sáng · đang nghe cùng mọi người</span><div class="toast">Sóng Ấm chắp tay chào bạn</div><div class="toast toast--warn">Hãy bấm vào khoảng sàn trống gần hơn</div>
+</div>
+<div class="demo demo--paper" style="margin-top:8px">
+  <span class="badge badge--accent">Đang ở</span><span class="badge badge--danger">Đủ người</span><span class="badge badge--soon">Soon</span><button class="toggle" role="switch" aria-checked="true" aria-label="on"></button><button class="toggle" role="switch" aria-checked="false" aria-label="off"></button><span class="meter"><span style="width:60%"></span></span>
+</div>
+
+<h2>AC → màn → khối</h2>
+<div class="table-wrap">
+<table>
+  <tr><th>AC</th><th>Màn</th><th>Khối trên design</th></tr>
+  <tr><td>AC1 boot xong, canvas hiện</td><td>boot, game</td><td>boot "đang tải" → game "MẶC ĐỊNH"</td></tr>
+  <tr><td>AC2 lỗi tải GLB</td><td>boot</td><td>"lỗi tải": Không tải được khung cảnh + Vào lại</td></tr>
+  <tr><td>AC3 W đi tới</td><td>game, world-map</td><td>"đang đi"; trục z trên bản đồ</td></tr>
+  <tr><td>AC4 click sàn</td><td>game</td><td>"đang đi" + chip Đang đi · Dừng</td></tr>
+  <tr><td>AC5 2 tab thấy nhau, 👥 = 2</td><td>game</td><td>👥 N ở trên-phải, nametag người khác</td></tr>
+  <tr><td>AC6 toast chào</td><td>game</td><td>"người khác chắp tay chào": ○○ chắp tay chào bạn</td></tr>
+  <tr><td>AC7 rời phòng → còn 1</td><td>game</td><td>👥 N giảm (cùng khối)</td></tr>
+  <tr><td>AC8 lạy → kneel + cushion</td><td>game, world-map</td><td>"đang lạy" (Lạy → Dừng sáng); 30 đệm trên bản đồ</td></tr>
+  <tr><td>AC9 Dừng → đứng</td><td>game</td><td>nút Dừng trong "đang lạy"</td></tr>
+  <tr><td>AC10 ↓ 5 lần → Vòng này 5 hạt</td><td>beads</td><td>"MẶC ĐỊNH · đã lần 5 hạt"</td></tr>
+  <tr><td>AC11 reload còn 5 hạt</td><td>beads</td><td>cùng khối (localStorage)</td></tr>
+  <tr><td>AC12 chọn Phòng 5 → pill + URL</td><td>rooms, game</td><td>danh sách 10 phòng; pill "Phòng N"</td></tr>
+  <tr><td>AC13 phòng đầy</td><td>game, rooms</td><td>toast "đã đủ người" + dialog mở tự động</td></tr>
+  <tr><td>AC14 mất kết nối / nối lại</td><td>game</td><td>"mất kết nối": chấm đỏ + toast Đang kết nối lại</td></tr>
+  <tr><td>AC15 390px không tràn</td><td>mọi màn</td><td>media query ≤600px: pill thu gọn, thanh dưới full width, dialog thành bottom sheet</td></tr>
+</table>
+</div>
+</div>
+</body>
+</html>

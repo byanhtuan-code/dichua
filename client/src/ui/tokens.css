@@ -1,0 +1,75 @@
+/* Sân Tĩnh tokens — copied 1:1 from design/tokens.css (values measured from the source site, D13) */
+:root {
+  --color-bg: #20251f;                          /* manifest background_color */
+  --color-paper: #f3efe5;                       /* --paper: boot / exit */
+  --color-ink: #34382f;                         /* --ink */
+  --color-ink-muted: #858677;                   /* --muted */
+
+  /* HUD "liquid glass" */
+  --color-hud: rgb(34 40 32 / 0.86);            /* .game-tools #222820dc */
+  --color-hud-solid: rgb(34 40 32 / 0.96);      /* .game-travel #222820f5 */
+  --color-hud-border: rgb(227 211 179 / 0.15);  /* #e3d3b326 */
+  --color-glass-clear: rgb(16 32 25 / 0.16);    /* toast / clear glass #10201929 */
+  --color-glass-edge: rgb(250 253 255 / 0.28);
+  --color-text: #eee8d8;                        /* HUD text */
+  --color-text-muted: #b9c5c0;
+  --color-gold: #f3e3bc;                        /* travel buttons */
+  --color-focus: #f2dca8;                       /* --glass-focus */
+
+  /* dialogs: dark regular glass */
+  --color-dialog: rgb(26 40 41 / 0.77);         /* --regular-fill dark #1a2829c4 */
+  --color-dialog-ink: #f1f5f4;
+  --color-dialog-muted: #b9c5c0;
+  --color-dialog-line: rgb(241 248 242 / 0.11);
+  --color-scrim: rgb(16 23 17 / 0.45);          /* ::backdrop #10171173 */
+
+  --color-accent: #a38d5f;                      /* current room border, warm brass */
+  --color-accent-fill: rgb(170 148 110 / 0.14);
+  --color-accent-text: #fffdf4;
+  --color-lantern: #f2d19b;
+  --color-kind-quiet: #a9c2ae;                  /* quiet-room tint (moss), pairs with lantern for chat rooms */
+  --color-chip: rgb(29 48 37 / 0.41);           /* .chant-invite #1d302569 */
+
+  --color-success: #8fbf8f;
+  --color-warning: #e7c27a;
+  --color-danger: #e08b78;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Be Vietnam Pro", Roboto, sans-serif;
+  --text-2xs: 10px;
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-base: 13px;
+  --text-md: 14px;
+  --text-lg: 17px;
+  --text-xl: 20px;
+  --text-2xl: 26px;
+  --text-3xl: 29px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  --radius-sm: 10px;
+  --radius-card: 18px;
+  --radius-toast: 24px;
+  --radius-pill: 28px;
+  --radius-dialog: 30px;
+
+  --shadow-hud: 0 4px 24px rgb(16 21 14 / 0.13);
+  --shadow-glass: 0 6px 20px rgb(5 21 14 / 0.09), inset 0 1px rgb(255 255 255 / 0.22), inset 0 -1px rgb(255 255 255 / 0.06);
+  --shadow-dialog: 0 20px 60px rgb(6 23 16 / 0.21), inset 0 1px rgb(255 255 255 / 0.4), inset 0 -1px rgb(255 255 255 / 0.09);
+
+  --blur-hud: 16px;
+  --blur-glass: 7px;
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --hud-gap: max(16px, env(safe-area-inset-left));
+  --z-hud: 10;
+  --z-toast: 20;
+  --z-overlay: 30;
+  --z-dialog: 40;
+}

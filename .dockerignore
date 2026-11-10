@@ -1,0 +1,17 @@
+**/node_modules
+.git
+_forge
+_phases
+design
+docs
+client/*
+!client/package.json
+tools
+**/dist
+**/test
+**/*.test.ts
+**/*.log
+**/.env*
+test-results
+playwright-report
+coverage

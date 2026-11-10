@@ -1,0 +1,33 @@
+/* Boot overlay (design/boot.html). Static so it paints before any JS; shapes from design/base.css. */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); font-size: var(--text-base); line-height: 1.5; -webkit-font-smoothing: antialiased; overflow: hidden; }
+:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; }
+svg { display: block; }
+
+.overlay { position: fixed; inset: 0; z-index: var(--z-overlay); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: var(--space-6); text-align: center; }
+.overlay[hidden] { display: none; }
+.overlay--paper { background: #eeece3; color: #4d5144; }
+.overlay h1 { margin: 0; font-size: 27px; font-weight: 500; letter-spacing: 5px; padding-left: 5px; }
+.overlay p { margin: 0; max-width: 32ch; color: #838677; font-size: var(--text-sm); line-height: 1.7; }
+.overlay .mark { color: #8a8068; }
+.mark svg { width: 32px; height: 32px; }
+.breath { width: 4px; height: 4px; margin-top: 18px; border-radius: 50%; background: #a99a7b; animation: breathe 1.8s ease-in-out infinite; }
+@keyframes breathe { 50% { opacity: .25; } }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); min-height: 48px; padding: 12px 18px; border: 0; border-radius: 25px; background: #5d6550; color: var(--color-accent-text); font-size: var(--text-md); font-weight: 600; text-decoration: none; }
+.btn:hover { background: #4d5444; }
+.btn--link { min-height: 44px; padding: 0 6px; border: 0; background: none; color: inherit; font-weight: 400; text-decoration: underline; text-underline-offset: 3px; display: inline-flex; align-items: center; }
+.btn--link:hover { background: none; }
+
+/* "Vào lại" appears only if loading drags past 15 s — pure CSS so it works even when JS stalls. */
+.boot-retry { position: absolute; bottom: max(24px, env(safe-area-inset-bottom)); visibility: hidden; opacity: 0; animation: boot-retry-in .4s ease 15s forwards; }
+@keyframes boot-retry-in { to { visibility: visible; opacity: 1; } }
+
+
+@media (prefers-reduced-motion: reduce) { .breath { animation: none; } .boot-retry { animation-duration: 0s; } }
+
+/* Game canvas sits under every overlay; touch-action none so drags rotate the camera instead of scrolling. */
+.scene-canvas { position: fixed; inset: 0; display: block; width: 100%; height: 100%; touch-action: none; }
+
+.debug-overlay { position: fixed; left: var(--space-2); bottom: var(--space-2); z-index: var(--z-toast); margin: 0; padding: var(--space-1) var(--space-2); border-radius: 6px; background: rgb(0 0 0 / .55); color: #d8f0d8; font: 11px/1.4 ui-monospace, Menlo, monospace; pointer-events: none; }

@@ -1,0 +1,401 @@
+/* Name tags (design/base.css .nametag). Positioned by transform from labels.ts, so left/top stay 0. */
+.visitor-labels {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Vertical stack anchored at bottom-center (50% 100%) so camera/viewport scaling stays pinned to the head */
+.nametag-wrap {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  transform-origin: 50% 100%;
+  will-change: transform;
+}
+
+.nametag-wrap[hidden] {
+  display: none;
+}
+
+/* ============================================================================
+   OPTION 2: PURE MINIMALIST LUMINOUS DHARMA TITLE (SMALLER THAN CHARACTER NAME)
+   Zero black borders, zero black shadows — pure colored luminescence & motes.
+   ============================================================================ */
+.nametag-title-pill {
+  --aura-core: rgb(255 205 64 / 0.42);
+  --aura-mid: rgb(255 150 24 / 0.18);
+  --glow-tight: rgb(214 112 0 / 0.92);
+  --glow-mid: rgb(255 196 48 / 0.9);
+  --glow-outer: rgb(255 148 16 / 0.68);
+  --mote-color: #ffe88a;
+  --title-grad: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #fff6cc 35%,
+    #ffd859 72%,
+    #ffea99 100%
+  );
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 6px;
+  background: none;
+  border: none;
+  box-shadow: none;
+  white-space: nowrap;
+  isolation: isolate;
+  animation: title-pure-float 2.6s ease-in-out infinite;
+}
+
+.nametag-title-pill[hidden] {
+  display: none !important;
+}
+
+/* Soft borderless radial backlight behind the Dharma title */
+.nametag-title-aura {
+  position: absolute;
+  inset: -4px -14px;
+  z-index: -2;
+  background: radial-gradient(
+    ellipse 52% 52% at 50% 50%,
+    var(--aura-core) 0%,
+    var(--aura-mid) 52%,
+    transparent 80%
+  );
+  filter: blur(5px);
+  animation: title-aura-pulse 2.6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Delicate floating light motes around the Dharma title */
+.nametag-title-motes {
+  position: absolute;
+  inset: -5px -10px;
+  z-index: -1;
+  background-image:
+    radial-gradient(circle at 12% 55%, #ffffff 0px, var(--mote-color) 1.3px, transparent 2.8px),
+    radial-gradient(circle at 88% 45%, #ffffff 0px, var(--mote-color) 1.3px, transparent 2.8px),
+    radial-gradient(circle at 28% 20%, #ffffff 0px, var(--mote-color) 1px, transparent 2.2px),
+    radial-gradient(circle at 72% 80%, #ffffff 0px, var(--mote-color) 1px, transparent 2.2px);
+  animation: title-motes-twinkle 3s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+/* Dharma title text: 10.5px (deliberately smaller & more refined than the 14px character name) */
+.nametag-title-text {
+  position: relative;
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.15;
+  background-image: var(--title-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Pure colored halo behind the title letters (ZERO black stroke or black shadow) */
+.nametag-title-text::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  color: transparent;
+  text-shadow:
+    0 0 2px var(--glow-tight),
+    0 0 5px var(--glow-tight),
+    0 0 10px var(--glow-mid),
+    0 0 18px var(--glow-outer);
+  pointer-events: none;
+}
+
+/* Diamond light sweep across the Dharma title */
+.nametag-title-text::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image: linear-gradient(
+    110deg,
+    transparent 0%,
+    transparent 38%,
+    rgb(255 255 255 / 0.96) 50%,
+    transparent 62%,
+    transparent 100%
+  );
+  background-size: 240% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: title-shimmer-sweep 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+/* Theme 1: Tịnh Tâm — Kim Liên Tịnh Quang (Pure Golden Luminescence) */
+.nametag-title-pill[data-theme="tinhtam"] {
+  --aura-core: rgb(255 206 64 / 0.44);
+  --aura-mid: rgb(255 152 20 / 0.18);
+  --glow-tight: rgb(204 102 0 / 0.92);
+  --glow-mid: rgb(255 198 52 / 0.92);
+  --glow-outer: rgb(255 150 20 / 0.7);
+  --mote-color: #ffe885;
+  --title-grad: linear-gradient(180deg, #ffffff 0%, #fff5c4 38%, #ffd44d 75%, #ffea9c 100%);
+}
+
+/* Theme 2: An Nhiên — Bích Ngọc Thanh Lương (Pure Jade Luminescence) */
+.nametag-title-pill[data-theme="annhien"] {
+  --aura-core: rgb(56 245 190 / 0.42);
+  --aura-mid: rgb(16 185 142 / 0.18);
+  --glow-tight: rgb(6 128 96 / 0.92);
+  --glow-mid: rgb(64 250 198 / 0.92);
+  --glow-outer: rgb(20 205 155 / 0.7);
+  --mote-color: #94ffe2;
+  --title-grad: linear-gradient(180deg, #ffffff 0%, #dcfff4 38%, #54f5c4 75%, #b8ffea 100%);
+}
+
+/* Theme 3: Cư Sĩ — Hổ Phách Trang Nghiêm (Warm Sunset Amber Luminescence) */
+.nametag-title-pill[data-theme="cusi"] {
+  --aura-core: rgb(255 138 56 / 0.45);
+  --aura-mid: rgb(235 64 28 / 0.2);
+  --glow-tight: rgb(186 48 12 / 0.92);
+  --glow-mid: rgb(255 152 60 / 0.92);
+  --glow-outer: rgb(240 78 32 / 0.72);
+  --mote-color: #ffd07a;
+  --title-grad: linear-gradient(180deg, #ffffff 0%, #ffebd0 38%, #ffa048 75%, #ffd994 100%);
+}
+
+/* Theme 4: Phước Huệ — Bảo Liên Cát Tường (Celestial Lotus Rose & Gold Luminescence) */
+.nametag-title-pill[data-theme="phuochue"] {
+  --aura-core: rgb(255 162 212 / 0.48);
+  --aura-mid: rgb(255 190 72 / 0.22);
+  --glow-tight: rgb(188 42 112 / 0.92);
+  --glow-mid: rgb(255 168 210 / 0.94);
+  --glow-outer: rgb(255 195 85 / 0.75);
+  --mote-color: #ffe89e;
+  --title-grad: linear-gradient(180deg, #ffffff 0%, #fff0cc 32%, #ff9ec8 72%, #ffe89c 100%);
+}
+
+@keyframes title-pure-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1.5px);
+  }
+}
+
+@keyframes title-aura-pulse {
+  0%, 100% {
+    opacity: 0.75;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes title-motes-twinkle {
+  0% {
+    opacity: 0.4;
+    transform: translateY(1.5px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.06);
+  }
+}
+
+@keyframes title-shimmer-sweep {
+  0% {
+    background-position: 180% 0;
+  }
+  42%, 100% {
+    background-position: -60% 0;
+  }
+}
+
+/* ============================================================================
+   CHARACTER NAMETAG (LARGER THAN TITLE, GREEN GLOWING DOWNWARD ARROW, ZERO BLACK)
+   ============================================================================ */
+.nametag {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  max-width: 190px;
+  padding: 0 4px;
+  border: none;
+  background: none;
+  box-shadow: none;
+  white-space: nowrap;
+  isolation: isolate;
+}
+
+/* Glowing emerald-green downward-pointing arrow before the player's name */
+.nametag-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #3dff8e;
+  flex-shrink: 0;
+  filter:
+    drop-shadow(0 0 3px rgb(0 200 96 / 0.95))
+    drop-shadow(0 0 8px rgb(52 255 142 / 0.85))
+    drop-shadow(0 0 14px rgb(16 225 112 / 0.6));
+  animation: nametag-down-arrow-bob 1.5s ease-in-out infinite alternate;
+}
+
+.nametag-arrow-svg {
+  width: 11px;
+  height: 13px;
+  display: block;
+}
+
+.nametag--other .nametag-arrow {
+  display: none;
+}
+
+@keyframes nametag-down-arrow-bob {
+  0% {
+    transform: translateY(-1.5px);
+  }
+  100% {
+    transform: translateY(1.5px);
+  }
+}
+
+/* Character Name: 14px (visibly larger than the 10.5px Dharma title), pure warm glow without black */
+.nametag-name {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.015em;
+  line-height: 1.2;
+  color: #fffdf7;
+  text-shadow:
+    0 0 3px rgb(138 92 24 / 0.85),
+    0 0 8px rgb(255 210 115 / 0.55);
+}
+
+.nametag--self .nametag-name {
+  font-size: 14px;
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow:
+    0 0 3px rgb(168 102 12 / 0.9),
+    0 0 8px rgb(255 212 96 / 0.78),
+    0 0 16px rgb(255 182 48 / 0.48);
+}
+
+/* Dozing (D25): three letters drift up from the tag's top-right corner, one after another. */
+.zzz {
+  position: absolute;
+  left: calc(100% + 2px);
+  bottom: 2px;
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+  color: #fffdf5;
+  font-weight: 600;
+  line-height: 1;
+  text-shadow:
+    0 0 4px rgb(168 112 24 / 0.85),
+    0 0 10px rgb(255 214 102 / 0.65);
+}
+
+.zzz[hidden] {
+  display: none;
+}
+
+.zzz b {
+  opacity: 0;
+  font-size: 10px;
+  animation: zzz-drift 3s ease-out infinite;
+}
+
+.zzz b:nth-child(2) {
+  font-size: 12px;
+  animation-delay: 0.6s;
+}
+
+.zzz b:nth-child(3) {
+  font-size: 15px;
+  animation-delay: 1.2s;
+}
+
+@keyframes zzz-drift {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  25% {
+    opacity: 0.95;
+  }
+  80% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zzz b,
+  .nametag-title-pill,
+  .nametag-title-aura,
+  .nametag-title-motes,
+  .nametag-title-text::after,
+  .nametag-arrow {
+    animation: none;
+  }
+  .zzz b {
+    opacity: 0.9;
+  }
+}
+
+/* Chat bubble (P4-D9): above the entire stacked wrapper, so it sits cleanly above the title. */
+.chat-bubble {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 6px);
+  width: max-content;
+  max-width: 200px;
+  padding: 5px 10px;
+  border: 1px solid var(--color-glass-edge);
+  border-radius: var(--radius-sm);
+  background: var(--color-dialog);
+  color: var(--color-dialog-ink);
+  font-size: var(--text-sm);
+  line-height: 1.35;
+  text-align: center;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  transform: translateX(-50%);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.chat-bubble[hidden] {
+  display: none;
+}

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>World map · Sân Tĩnh design</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="base.css">
+<style>
+  .map { width: 100%; height: auto; background: #233029; border-radius: var(--radius-md); }
+  .map text { font-family: var(--font-sans); fill: var(--color-text); font-size: 2px; }
+  .map .small { font-size: 1.4px; fill: var(--color-text-muted); }
+  .spec { width: 100%; border-collapse: collapse; margin-top: var(--space-6); font-size: var(--text-sm); }
+  .spec th, .spec td { padding: var(--space-2); border-bottom: 1px solid var(--color-glass-border); text-align: left; vertical-align: top; }
+  .spec code { color: var(--color-lantern); }
+  .table-wrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+<div class="ds-page">
+<nav class="ds-nav"><a href="index.html">← Mục lục</a><a href="boot.html">boot</a><a href="game.html">game</a><a href="rooms.html">rooms</a><a href="beads.html">beads</a><a href="settings.html">settings</a><a href="people.html">people</a><a href="exit.html">exit</a><a href="rest.html">rest</a><a href="world-map.html">world-map</a></nav>
+<h1 class="ds-title">World map · nhìn từ trên xuống</h1>
+<p class="ds-note">Toạ độ mét của thế giới 3D (x sang phải, z về phía người xem; y lên). Phase 01 đặt mọi hằng số này vào <code>shared/world.ts</code>. Bố cục tự thiết kế (D2), không chép toạ độ site gốc.</p>
+
+<svg class="map" viewBox="-50 -30 100 92" role="img" aria-label="Bản đồ Sân Tĩnh">
+  <!-- boundary -->
+  <ellipse cx="0" cy="16" rx="47" ry="44" fill="#2b3a31" stroke="#49604f" stroke-width=".4" stroke-dasharray="1 1"/>
+  <!-- woodland ring -->
+  <g fill="#3f5a45">
+    <circle cx="-36" cy="-6" r="2.4"/><circle cx="-40" cy="10" r="2"/><circle cx="-34" cy="30" r="2.6"/><circle cx="-24" cy="50" r="2.2"/>
+    <circle cx="36" cy="-8" r="2.2"/><circle cx="40" cy="30" r="2.5"/><circle cx="26" cy="50" r="2"/><circle cx="-18" cy="-22" r="2"/><circle cx="18" cy="-22" r="2.3"/>
+  </g>
+  <!-- hall -->
+  <rect x="-14" y="-18" width="28" height="32" fill="#5b4a3a" stroke="#c9a77a" stroke-width=".3"/>
+  <rect x="-16" y="-20" width="32" height="36" fill="none" stroke="#2a2420" stroke-width=".6" stroke-dasharray="2 .6"/>
+  <text x="-13" y="-20.6">Tịch Mặc Đường (hall) · viền mái</text>
+  <!-- columns -->
+  <g fill="#7a3b2c">
+    <circle cx="-12.5" cy="-16.5" r=".7"/><circle cx="12.5" cy="-16.5" r=".7"/><circle cx="-12.5" cy="-4" r=".7"/><circle cx="12.5" cy="-4" r=".7"/>
+    <circle cx="-12.5" cy="8" r=".7"/><circle cx="12.5" cy="8" r=".7"/><circle cx="-12.5" cy="13.3" r=".7"/><circle cx="12.5" cy="13.3" r=".7"/>
+    <circle cx="-5" cy="13.3" r=".6"/><circle cx="5" cy="13.3" r=".6"/>
+  </g>
+  <!-- altar + buddha -->
+  <rect x="-5" y="-17" width="10" height="3" fill="#8a6a3a"/><circle cx="0" cy="-15.5" r="1.3" fill="#e0b25a"/>
+  <text x="-4.4" y="-12.6" class="small">bàn thờ + tượng Phật (z=-15.5)</text>
+  <!-- cushions 6x5 -->
+  <g fill="#a8433a">
+    <rect x="-6.6" y="-6.6" width="1.2" height="1.2"/><rect x="-4.2" y="-6.6" width="1.2" height="1.2"/><rect x="-1.8" y="-6.6" width="1.2" height="1.2"/><rect x=".6" y="-6.6" width="1.2" height="1.2"/><rect x="3" y="-6.6" width="1.2" height="1.2"/><rect x="5.4" y="-6.6" width="1.2" height="1.2"/>
+    <rect x="-6.6" y="-4.2" width="1.2" height="1.2"/><rect x="-4.2" y="-4.2" width="1.2" height="1.2"/><rect x="-1.8" y="-4.2" width="1.2" height="1.2"/><rect x=".6" y="-4.2" width="1.2" height="1.2"/><rect x="3" y="-4.2" width="1.2" height="1.2"/><rect x="5.4" y="-4.2" width="1.2" height="1.2"/>
+    <rect x="-6.6" y="-1.8" width="1.2" height="1.2"/><rect x="-4.2" y="-1.8" width="1.2" height="1.2"/><rect x="-1.8" y="-1.8" width="1.2" height="1.2"/><rect x=".6" y="-1.8" width="1.2" height="1.2"/><rect x="3" y="-1.8" width="1.2" height="1.2"/><rect x="5.4" y="-1.8" width="1.2" height="1.2"/>
+    <rect x="-6.6" y=".6" width="1.2" height="1.2"/><rect x="-4.2" y=".6" width="1.2" height="1.2"/><rect x="-1.8" y=".6" width="1.2" height="1.2"/><rect x=".6" y=".6" width="1.2" height="1.2"/><rect x="3" y=".6" width="1.2" height="1.2"/><rect x="5.4" y=".6" width="1.2" height="1.2"/>
+    <rect x="-6.6" y="3" width="1.2" height="1.2"/><rect x="-4.2" y="3" width="1.2" height="1.2"/><rect x="-1.8" y="3" width="1.2" height="1.2"/><rect x=".6" y="3" width="1.2" height="1.2"/><rect x="3" y="3" width="1.2" height="1.2"/><rect x="5.4" y="3" width="1.2" height="1.2"/>
+  </g>
+  <text x="-6.6" y="6.6" class="small">30 bồ đoàn (6×5, cách 2.4 m)</text>
+  <!-- NPC residents -->
+  <g fill="#f2b766"><circle cx="-6" cy="-6" r=".45"/><circle cx="6" cy="-6" r=".45"/><circle cx="-6" cy="3.6" r=".45"/><circle cx="6" cy="3.6" r=".45"/></g>
+  <!-- steps -->
+  <rect x="-4" y="14" width="8" height="4" fill="#6d6a60"/>
+  <text x="4.6" y="20.4" class="small">bậc trước (hall ↔ vườn)</text>
+  <!-- stone path to gate -->
+  <path d="M0 18 L0 44" stroke="#6e6c62" stroke-width="3"/>
+  <!-- lantern loop west -->
+  <path d="M0 30 C -12 30 -26 30 -30 20 C -34 10 -26 4 -22 8 C -18 12 -20 24 -8 30" fill="none" stroke="#6e6c62" stroke-width="2"/>
+  <g fill="#f2b766"><circle cx="-12" cy="31.4" r=".5"/><circle cx="-25" cy="29" r=".5"/><circle cx="-32" cy="16" r=".5"/><circle cx="-26" cy="5.4" r=".5"/><circle cx="-17.6" cy="14" r=".5"/><circle cx="-13" cy="27" r=".5"/></g>
+  <text x="-36" y="34" class="small">đường đèn sen</text>
+  <!-- lotus pond east -->
+  <ellipse cx="24" cy="12" rx="7" ry="10" fill="#2f5560" stroke="#4d7d86" stroke-width=".3"/>
+  <g fill="#e7a0a6"><circle cx="22" cy="8" r=".6"/><circle cx="26" cy="13" r=".6"/><circle cx="23" cy="17" r=".6"/></g>
+  <text x="18" y="24" class="small">hồ sen (không đi vào)</text>
+  <!-- gate + spawn -->
+  <rect x="-5" y="44" width="10" height="1.6" fill="#2a2420"/>
+  <text x="5.8" y="45.4" class="small">tam quan (cổng, ranh giới)</text>
+  <circle cx="0" cy="38" r="1" fill="#3f8f7b"/><path d="M0 38 L0 35.5" stroke="#3f8f7b" stroke-width=".4"/>
+  <text x="1.6" y="38.6">spawn (0, 38) · nhìn về hall</text>
+  <!-- P2 moonlight yard -->
+  <circle cx="32" cy="38" r="7" fill="none" stroke="#c9c4b5" stroke-width=".3" stroke-dasharray="1 1"/>
+  <text x="27.4" y="38.6" class="small">Sân Trăng · P2 Soon</text>
+  <!-- axes -->
+  <path d="M-46 -26 h6 M-46 -26 v6" stroke="#c9c4b5" stroke-width=".3"/>
+  <text x="-39.4" y="-25.4" class="small">+x</text><text x="-46.6" y="-18.4" class="small">+z</text>
+</svg>
+
+<div class="table-wrap">
+<table class="spec">
+  <tr><th>Khu</th><th>Hằng số</th><th>Ghi chú</th></tr>
+  <tr><td>Hall Tịch Mặc Đường</td><td><code>HALL = {xMin:-14, xMax:14, zMin:-18, zMax:14, floorY:0.6}</code></td><td>Tên mới Tịch Mặc Đường 寂默堂 (không dùng 청연당 của gốc). Sàn gỗ cao 0.6 m, mái ngói cong vượt tường 2 m. Vào/ra chỉ qua bậc trước.</td></tr>
+  <tr><td>Cột</td><td><code>x=±12.5, z∈{-16.5,-4,8,13.3}</code>; mặt tiền <code>x=±5, z=13.3</code></td><td>Va chạm hình tròn r=0.7.</td></tr>
+  <tr><td>Bàn thờ</td><td><code>ALTAR = {x:0, z:-15.5}</code></td><td>Tượng Phật scan (KOGL), cao ~2.2 m sau khi scale.</td></tr>
+  <tr><td>Bồ đoàn</td><td><code>cushion(i) = {x:-6+(i%6)*2.4, z:-6+floor(i/6)*2.4}</code>, i=0..29</td><td>Mặt quay về bàn thờ (yaw=π). NPC ở đệm 0, 5, 24, 29.</td></tr>
+  <tr><td>Bậc trước</td><td><code>STEPS = {xMin:-4, xMax:4, zMin:14, zMax:18}</code></td><td>Dốc nối sàn hall với đất (y=0).</td></tr>
+  <tr><td>Đường đá</td><td>(0,18) → (0,44), rộng 3 m</td><td>Đèn lồng đá 2 bên mỗi 6 m.</td></tr>
+  <tr><td>Đường đèn sen</td><td>đường cong phía tây, rộng 2 m, 6 đèn lồng sen</td><td>Đèn sáng ban đêm (18–06 giờ VN).</td></tr>
+  <tr><td>Hồ sen</td><td><code>POND = {x:24, z:12, rx:7, rz:10}</code></td><td>Vùng cấm đi; mặt nước + 3 hoa sen.</td></tr>
+  <tr><td>Ranh giới</td><td>elip tâm (0,16), rx 47, rz 44; cổng ở z=44</td><td>Ngoài ranh: không đi được (server cũng chặn).</td></tr>
+  <tr><td>Spawn</td><td><code>SPAWN = {x:0, z:38, yaw:π}</code></td><td>Lệch ngẫu nhiên ±1.5 m để người mới không chồng nhau.</td></tr>
+  <tr><td>Camera</td><td>sau lưng 6 m, cao 3 m, zoom 3–12 m, pitch 10°–60°</td><td>Kéo xoay quanh nhân vật; trong hall giới hạn để không xuyên mái.</td></tr>
+  <tr><td>Ngày / đêm</td><td>06:00–18:00 giờ VN ngày; chuyển 20 phút</td><td>Đêm: trời xanh đậm, đèn lồng + đèn hall sáng.</td></tr>
+</table>
+</div>
+</div>
+</body>
+</html>

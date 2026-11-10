@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>{{vi.meta.title}}</title>
+<meta name="description" content="{{vi.meta.description}}">
+<meta name="theme-color" content="#20251f">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{vi.meta.title}}">
+<meta property="og:description" content="{{vi.meta.description}}">
+<meta property="og:locale" content="vi_VN">
+<meta property="og:url" content="{{site}}/">
+<meta property="og:image" content="{{site}}/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{vi.og.alt}}">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/src/ui/tokens.css">
+<link rel="stylesheet" href="/src/ui/boot.css">
+</head>
+<body>
+<main id="boot" class="overlay overlay--paper" role="status" aria-label="{{vi.boot.title}}">
+  <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5c4-.6 7-3 9-6 2 3 5 5.4 9 6M5 11.5h14M7.5 12v7.5m9-7.5v7.5M4.5 19.5h15M10.5 14.5h3v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/></svg></span>
+  <h1 data-boot="title">{{vi.boot.title}}</h1>
+  <p data-boot="body">{{vi.boot.loading}}</p>
+  <noscript><p>{{vi.meta.noscript}}</p></noscript>
+  <span class="breath" data-boot="breath" aria-hidden="true"></span>
+  <a class="btn--link boot-retry" data-boot="retry" href="">{{vi.boot.retry}}</a>
+</main>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

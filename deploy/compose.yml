@@ -1,0 +1,37 @@
+# Lives at <REMOTE_DIR>/docker-compose.yml on the server (copied by scripts/deploy-server.sh).
+services:
+  santinh-rt:
+    image: santinh-rt:latest
+    pull_policy: never
+    restart: unless-stopped
+    mem_limit: 192m
+    environment:
+      PORT: "3663"
+      # Node 24 sizes the heap at ~259 MB even under mem_limit 192m: without a cap the kernel kills it (137) before V8 collects.
+      # node:sqlite (accounts) prints an ExperimentalWarning on every start in Node 24.
+      NODE_OPTIONS: "--max-old-space-size=128 --disable-warning=ExperimentalWarning"
+      # CAPACITY / FAKE_POPULATION left unset: the defaults come from shared/ (ROOM_CAPACITY) and config.ts.
+      # Where the client is hosted; set in deploy/deploy.env, written to ~/santinh/.env by the deploy script.
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:?set ALLOWED_ORIGINS in deploy/deploy.env}
+      # Caddy is the only peer, so the client IP comes from X-Forwarded-For.
+      TRUST_PROXY: "on"
+      # Per IP per room (shared Wi-Fi / mobile NAT share one IP).
+      MAX_CONN_PER_IP_ROOM: "10"
+      # Bot config saved from /admin; the volume keeps it across deploys.
+      DATA_DIR: /app/data
+      # From <REMOTE_DIR>/.env on the server, never committed; empty = /admin off (404).
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+    volumes:
+      - santinh-data:/app/data
+    # No `ports:` — only Caddy reaches it through the shared network.
+    networks:
+      - caddy
+
+volumes:
+  santinh-data:
+
+networks:
+  caddy:
+    external: true
+    # Check with `docker network ls` on the server (the network your Caddy runs in).
+    name: ${CADDY_NETWORK:?set CADDY_NETWORK in deploy/deploy.env}

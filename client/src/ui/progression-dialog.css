@@ -1,0 +1,1097 @@
+/* ============================================================================
+   1. COMPACT TOP-LEFT LOTUS PLAYER STATUS CARD + ROOM SELECTOR BELOW AVATAR
+   ============================================================================ */
+.lotus-player-wrap {
+  position: fixed;
+  top: max(10px, env(safe-area-inset-top, 0px));
+  left: max(10px, env(safe-area-inset-left, 0px));
+  z-index: var(--z-hud, 10);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  user-select: none;
+  filter: drop-shadow(0 4px 10px rgb(0 0 0 / 0.38));
+}
+
+.lotus-player-card {
+  display: flex;
+  align-items: center;
+}
+
+.lotus-avatar-frame {
+  position: relative;
+  z-index: 2;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2.5px solid #ffd859;
+  background: radial-gradient(circle at 30% 25%, #fff5b8, #e09919 68%, #7d4704 100%);
+  box-shadow:
+    inset 0 1.5px 3px rgb(255 255 255 / 0.75),
+    0 0 0 1.5px #7a4204,
+    0 3px 8px rgb(0 0 0 / 0.42);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.lotus-avatar-frame:hover {
+  transform: scale(1.04);
+}
+
+.lotus-avatar-frame:active {
+  transform: scale(0.97);
+}
+
+.lotus-avatar-art,
+.lotus-avatar-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 50%;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.lotus-avatar-art[hidden],
+.lotus-avatar-img[hidden] {
+  display: none !important;
+}
+
+.lotus-avatar-art svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 50%;
+}
+
+.lotus-avatar-lotus {
+  position: absolute;
+  inset: -3px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.lotus-avatar-lotus svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.lotus-avatar-cam {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  z-index: 4;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid #ffe680;
+  background: linear-gradient(180deg, #8c4a19, #4a2004);
+  font-size: 0.56rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  pointer-events: none;
+}
+
+.lotus-avatar-frame:hover .lotus-avatar-cam {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.lotus-player-panel {
+  position: relative;
+  z-index: 1;
+  margin-left: -12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 158px;
+  max-width: 192px;
+}
+
+.lotus-player-top {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding-left: 12px;
+}
+
+.lotus-name-pill {
+  flex: 1;
+  min-width: 0;
+  height: 23px;
+  padding: 0 8px 0 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 8px 11px 11px 3px;
+  border: 1.5px solid #f7c346;
+  background: linear-gradient(180deg, #8c4a19 0%, #632f09 55%, #4a2004 100%);
+  box-shadow:
+    inset 0 1px 1px rgb(255 232 163 / 0.5),
+    0 1.5px 3px rgb(0 0 0 / 0.38);
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.lotus-name-icon {
+  width: 15px;
+  height: 12px;
+  flex-shrink: 0;
+  display: inline-flex;
+}
+
+.lotus-name-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.lotus-name-text {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: #fffdf5;
+  text-shadow: 0 1.5px 2px rgb(0 0 0 / 0.85);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 86px;
+}
+
+.lotus-level-badge {
+  height: 23px;
+  padding: 0 8px;
+  border-radius: 12px;
+  border: 1.5px solid #ffe680;
+  background: linear-gradient(180deg, #ffd754 0%, #ea9315 55%, #b85d04 100%);
+  box-shadow:
+    inset 0 1px 1px rgb(255 255 255 / 0.75),
+    0 1.5px 3px rgb(0 0 0 / 0.42);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgb(92 38 0 / 0.95);
+  cursor: pointer;
+}
+
+.lotus-bars-box {
+  position: relative;
+  padding: 4px 12px 4px 15px;
+  border-radius: 0 12px 12px 9px;
+  border: 2px solid #f5be3b;
+  background: linear-gradient(180deg, #733910 0%, #4d2206 100%);
+  box-shadow:
+    inset 0 1.5px 4px rgb(0 0 0 / 0.55),
+    0 2px 5px rgb(0 0 0 / 0.35);
+  display: flex;
+  flex-direction: column;
+}
+
+.lotus-stat-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.lotus-stat-icon {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  display: inline-flex;
+}
+
+.lotus-stat-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.lotus-stat-label {
+  width: 24px;
+  font-size: 0.64rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.9);
+  flex-shrink: 0;
+}
+
+.lotus-stat-label--exp {
+  color: #e28aff;
+}
+
+.lotus-bar-track {
+  position: relative;
+  flex: 1;
+  height: 12px;
+  border-radius: 999px;
+  background: #2b1203;
+  border: 1px solid rgb(255 214 128 / 0.35);
+  box-shadow: inset 0 1.5px 3px rgb(0 0 0 / 0.8);
+  overflow: hidden;
+}
+
+.lotus-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.lotus-bar-fill--exp {
+  background: linear-gradient(180deg, #f39cff 0%, #b83dff 55%, #7512bd 100%);
+  box-shadow: inset 0 1px 1px rgb(255 255 255 / 0.65);
+}
+
+.lotus-bar-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.95);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+.lotus-panel-flower {
+  position: absolute;
+  right: -9px;
+  bottom: -6px;
+  width: 22px;
+  height: 18px;
+  pointer-events: none;
+}
+
+.lotus-panel-flower svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Room / Server selector button placed neatly on its own row below the Avatar */
+.lotus-room-btn {
+  margin-left: 2px;
+  height: 25px;
+  padding: 0 10px 0 8px;
+  border-radius: 999px;
+  border: 1.5px solid #f5be3b;
+  background: linear-gradient(180deg, #7d3e12 0%, #4d2206 100%);
+  box-shadow:
+    inset 0 1px 1px rgb(255 232 163 / 0.45),
+    0 2px 6px rgb(0 0 0 / 0.4);
+  color: #fff8e6;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 195px;
+  cursor: pointer;
+  transition: filter 0.14s ease, transform 0.14s ease;
+}
+
+.lotus-room-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.lotus-room-btn:active {
+  transform: scale(0.97);
+}
+
+.lotus-room-btn .status-dot {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+}
+
+.lotus-room-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  display: inline-flex;
+}
+
+.lotus-room-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.lotus-room-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.85);
+}
+
+.lotus-room-chevron {
+  font-size: 0.68rem;
+  color: #ffd86b;
+  line-height: 1;
+}
+
+/* Force-hide legacy top-left toolbar; keep .hud-top-right centered at the top for CeremonyBanner */
+.game-hud .hud-top-left,
+.game-hud .status-chip {
+  display: none !important;
+}
+
+.game-hud .hud-top-right {
+  top: max(10px, env(safe-area-inset-top, 0px));
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  align-items: center;
+  pointer-events: none;
+}
+
+/* ============================================================================
+   2. COMPACT TOP-RIGHT CURRENCY BAR + SETTINGS GEAR + SINGLE `Nhiệm Vụ` BUTTON
+   ============================================================================ */
+.lotus-top-right {
+  position: fixed;
+  top: max(10px, env(safe-area-inset-top, 0px));
+  right: max(10px, env(safe-area-inset-right, 0px));
+  z-index: var(--z-hud, 10);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  user-select: none;
+}
+
+.lotus-currency-bar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 34px;
+  padding: 0 4px 0 9px;
+  border-radius: 999px;
+  border: 2px solid #f7c548;
+  background: linear-gradient(180deg, #753b10 0%, #4d2305 55%, #381702 100%);
+  box-shadow:
+    inset 0 1.5px 2px rgb(255 232 166 / 0.42),
+    0 0 0 1px #6b3600,
+    0 4px 10px rgb(0 0 0 / 0.38);
+}
+
+.lotus-bar-wing {
+  position: absolute;
+  top: 50%;
+  width: 22px;
+  height: 18px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.lotus-bar-wing--left {
+  left: -10px;
+  transform: translateY(-42%) rotate(-18deg);
+}
+
+.lotus-bar-wing--right {
+  right: -9px;
+  transform: translateY(-42%) scaleX(-1) rotate(-18deg);
+}
+
+.lotus-bar-wing svg {
+  width: 100%;
+  height: 100%;
+}
+
+.lotus-curr-slot {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  height: 23px;
+  padding: 0 2px 0 3px;
+  border-radius: 999px;
+  background: rgb(28 11 2 / 0.52);
+  border: 1px solid rgb(255 210 115 / 0.24);
+  cursor: pointer;
+  transition: background-color 0.14s ease;
+}
+
+.lotus-curr-slot:hover {
+  background: rgb(52 22 5 / 0.72);
+}
+
+.lotus-curr-icon {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  display: inline-flex;
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.45));
+}
+
+.lotus-curr-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.lotus-curr-val {
+  min-width: 16px;
+  padding: 0 2px;
+  text-align: center;
+  font-size: 0.76rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.9);
+}
+
+.lotus-curr-plus {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid #ffe88a;
+  background: linear-gradient(180deg, #ffd646 0%, #eb8c10 60%, #b55702 100%);
+  box-shadow: inset 0 1px 1px rgb(255 255 255 / 0.8), 0 1px 2px rgb(0 0 0 / 0.5);
+  color: #5c2600;
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.lotus-curr-plus:hover {
+  filter: brightness(1.08);
+}
+
+.lotus-settings-btn {
+  width: 26px;
+  height: 26px;
+  padding: 3px;
+  border-radius: 50%;
+  border: 2px solid #ffe47a;
+  background: linear-gradient(180deg, #914d16 0%, #592805 100%);
+  box-shadow:
+    inset 0 1px 2px rgb(255 232 165 / 0.65),
+    0 1.5px 4px rgb(0 0 0 / 0.5);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.16s ease;
+}
+
+.lotus-settings-btn:hover {
+  transform: rotate(22deg) scale(1.05);
+}
+
+.lotus-settings-btn svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Quick Action Row (Single `Nhiệm Vụ` button) */
+.lotus-quick-row {
+  display: flex;
+  align-items: center;
+  padding-right: 2px;
+}
+
+.lotus-quick-btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  filter: drop-shadow(0 3px 6px rgb(0 0 0 / 0.45));
+  transition: transform 0.14s ease;
+}
+
+.lotus-quick-btn:hover {
+  transform: translateY(-1.5px) scale(1.04);
+}
+
+.lotus-quick-btn:active {
+  transform: translateY(0) scale(0.96);
+}
+
+.lotus-quick-art {
+  width: 42px;
+  height: 38px;
+  display: block;
+}
+
+.lotus-quick-art svg {
+  width: 100%;
+  height: 100%;
+}
+
+.lotus-quick-label {
+  margin-top: -6px;
+  padding: 1.5px 8px;
+  border-radius: 999px;
+  border: 1.5px solid #ffd459;
+  background: linear-gradient(180deg, #d9381e 0%, #961b09 100%);
+  box-shadow: inset 0 1px 1px rgb(255 225 160 / 0.65), 0 1.5px 3px rgb(0 0 0 / 0.5);
+  color: #ffffff;
+  font-size: 0.64rem;
+  font-weight: 800;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.9);
+}
+
+.lotus-red-bang {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  border: 1.5px solid #fff3c4;
+  background: linear-gradient(180deg, #ff4b3a 0%, #c91407 100%);
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 900;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgb(0 0 0 / 0.55);
+  animation: merit-dot-pulse 1.5s infinite ease-in-out;
+}
+
+.lotus-red-bang[hidden] {
+  display: none !important;
+}
+
+@keyframes merit-dot-pulse {
+  0%, 100% { transform: scale(0.94); }
+  50% { transform: scale(1.14); }
+}
+
+body:has(dialog.beads[open]) .lotus-player-wrap,
+body:has(dialog.beads[open]) .lotus-top-right {
+  display: none !important;
+}
+
+/* Keep control hint and toasts clear on narrow viewports */
+@media (max-width: 900px) {
+  .game-hud .hud-hint {
+    top: 108px;
+  }
+  .toasts {
+    top: 152px;
+  }
+}
+
+/* Ultra-compact responsive layout for mobile screens so left & right HUD never touch */
+@media (max-width: 720px) {
+  .lotus-player-wrap {
+    gap: 4px;
+  }
+  .lotus-avatar-frame {
+    width: 44px;
+    height: 44px;
+    border-width: 2px;
+  }
+  .lotus-player-panel {
+    margin-left: -10px;
+    min-width: 124px;
+    max-width: 146px;
+  }
+  .lotus-player-top {
+    padding-left: 10px;
+  }
+  .lotus-name-pill {
+    height: 19px;
+    padding: 0 6px 0 4px;
+  }
+  .lotus-name-icon {
+    width: 12px;
+    height: 10px;
+  }
+  .lotus-name-text {
+    font-size: 0.68rem;
+    max-width: 58px;
+  }
+  .lotus-level-badge {
+    height: 19px;
+    padding: 0 6px;
+    font-size: 0.62rem;
+  }
+  .lotus-bars-box {
+    padding: 3px 8px 3px 12px;
+  }
+  .lotus-stat-label {
+    width: 20px;
+    font-size: 0.56rem;
+  }
+  .lotus-bar-track {
+    height: 10px;
+  }
+  .lotus-bar-text {
+    font-size: 0.52rem;
+  }
+  .lotus-panel-flower {
+    width: 16px;
+    height: 13px;
+    right: -6px;
+    bottom: -4px;
+  }
+  .lotus-room-btn {
+    margin-left: 1px;
+    height: 21px;
+    padding: 0 8px 0 6px;
+    font-size: 0.62rem;
+    max-width: 155px;
+  }
+  .lotus-room-icon {
+    width: 12px;
+    height: 12px;
+  }
+  .lotus-currency-bar {
+    height: 28px;
+    gap: 3px;
+    padding: 0 3px 0 6px;
+    border-width: 1.5px;
+  }
+  .lotus-bar-wing {
+    display: none;
+  }
+  .lotus-curr-slot {
+    height: 20px;
+    gap: 2px;
+    padding: 0 2px;
+  }
+  .lotus-curr-icon {
+    width: 14px;
+    height: 14px;
+  }
+  .lotus-curr-val {
+    min-width: 12px;
+    font-size: 0.68rem;
+  }
+  .lotus-curr-plus {
+    width: 14px;
+    height: 14px;
+    font-size: 0.68rem;
+  }
+  .lotus-settings-btn {
+    width: 22px;
+    height: 22px;
+    padding: 2px;
+  }
+  .lotus-quick-art {
+    width: 34px;
+    height: 31px;
+  }
+  .lotus-quick-label {
+    font-size: 0.58rem;
+    padding: 1px 6px;
+  }
+  .game-hud .hud-top-right {
+    top: 96px;
+  }
+}
+
+/* Title badge inside the player's nametag */
+.nametag .nametag-title {
+  display: inline-block;
+  margin-right: 5px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgb(245 198 105 / 0.28), rgb(186 130 48 / 0.36));
+  border: 1px solid rgb(245 208 135 / 0.55);
+  color: #ffe7b3;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  vertical-align: middle;
+}
+
+/* ============================================================================
+   3. MAIN PROGRESSION & SHOP MODAL
+   ============================================================================ */
+dialog.progression-dialog {
+  width: min(92vw, 540px);
+  max-height: min(86vh, 660px);
+  margin: auto;
+  padding: 0;
+  border: 2px solid rgb(245 198 92 / 0.55);
+  border-radius: 20px;
+  background: rgb(22 19 16 / 0.94);
+  color: var(--color-text, #f5efe6);
+  font-family: var(--font-sans, system-ui, sans-serif);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 20px 50px rgb(0 0 0 / 0.6);
+  overflow: hidden;
+}
+
+dialog.progression-dialog::backdrop {
+  background: rgb(8 7 6 / 0.52);
+  backdrop-filter: blur(3px);
+}
+
+.prog-shell {
+  display: flex;
+  flex-direction: column;
+  max-height: min(86vh, 660px);
+}
+
+.prog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid rgb(242 209 155 / 0.14);
+}
+
+.prog-title-wrap h2 {
+  margin: 0;
+  font-size: 1.12rem;
+  font-weight: 600;
+  color: var(--color-gold, #f2d19b);
+}
+
+.prog-title-wrap p {
+  margin: 3px 0 0;
+  font-size: 0.78rem;
+  color: rgb(245 239 230 / 0.68);
+}
+
+.prog-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.prog-balance {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgb(242 209 155 / 0.12);
+  border: 1px solid rgb(242 209 155 / 0.3);
+  color: #ffe5ad;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.prog-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgb(242 209 155 / 0.2);
+  background: rgb(255 255 255 / 0.05);
+  color: var(--color-text, #f5efe6);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.prog-close:hover {
+  background: rgb(255 255 255 / 0.12);
+}
+
+/* Tabs */
+.prog-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  padding: 10px 20px;
+  background: rgb(14 12 10 / 0.45);
+  border-bottom: 1px solid rgb(242 209 155 / 0.12);
+}
+
+.prog-tab {
+  position: relative;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgb(245 239 230 / 0.72);
+  font-size: 0.83rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.prog-tab:hover {
+  color: #fff;
+  background: rgb(242 209 155 / 0.08);
+}
+
+.prog-tab[aria-selected="true"] {
+  color: #1c1610;
+  background: linear-gradient(135deg, #f5d79d, #dfb063);
+  border-color: rgb(255 242 210 / 0.6);
+}
+
+/* Body Panels */
+.prog-body {
+  padding: 16px 20px 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Check-in 7-day grid */
+.checkin-banner {
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgb(242 209 155 / 0.14), rgb(242 209 155 / 0.05));
+  border: 1px solid rgb(242 209 155 / 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.checkin-banner-text strong {
+  display: block;
+  font-size: 0.92rem;
+  color: #ffe8ba;
+}
+
+.checkin-banner-text span {
+  font-size: 0.78rem;
+  color: rgb(245 239 230 / 0.74);
+}
+
+.checkin-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.checkin-day {
+  padding: 10px 8px;
+  border-radius: 12px;
+  border: 1px solid rgb(242 209 155 / 0.18);
+  background: rgb(255 255 255 / 0.03);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.checkin-day--wide {
+  grid-column: span 2;
+  background: linear-gradient(135deg, rgb(242 209 155 / 0.14), rgb(186 130 48 / 0.1));
+}
+
+.checkin-day--done {
+  border-color: rgb(110 215 155 / 0.45);
+  background: rgb(60 150 100 / 0.14);
+}
+
+.checkin-day--today {
+  border-color: #f5c976;
+  box-shadow: 0 0 14px rgb(245 201 118 / 0.22);
+}
+
+.checkin-day-label {
+  font-size: 0.74rem;
+  color: rgb(245 239 230 / 0.68);
+}
+
+.checkin-day-reward {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #ffe4a8;
+}
+
+.checkin-day-status {
+  font-size: 0.7rem;
+  color: rgb(150 235 185 / 0.9);
+}
+
+/* Quests list */
+.quest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quest-card {
+  padding: 12px 14px;
+  border-radius: 13px;
+  border: 1px solid rgb(242 209 155 / 0.16);
+  background: rgb(255 255 255 / 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.quest-card--done {
+  border-color: rgb(242 209 155 / 0.42);
+  background: rgb(242 209 155 / 0.07);
+}
+
+.quest-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.quest-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.quest-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #fff3db;
+}
+
+.quest-reward-tag {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #f5c976;
+  white-space: nowrap;
+}
+
+.quest-desc {
+  margin: 3px 0 7px;
+  font-size: 0.76rem;
+  color: rgb(245 239 230 / 0.68);
+}
+
+.quest-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quest-bar {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.1);
+  overflow: hidden;
+}
+
+.quest-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #e0a952, #f7d794);
+  transition: width 0.25s ease;
+}
+
+.quest-count {
+  font-size: 0.73rem;
+  font-variant-numeric: tabular-nums;
+  color: rgb(245 239 230 / 0.75);
+}
+
+/* Shop list */
+.shop-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.shop-card {
+  padding: 12px 14px;
+  border-radius: 13px;
+  border: 1px solid rgb(242 209 155 / 0.18);
+  background: rgb(255 255 255 / 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.shop-card--equipped {
+  border-color: rgb(120 230 175 / 0.55);
+  background: rgb(55 145 100 / 0.12);
+}
+
+.shop-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.shop-cat {
+  display: inline-block;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgb(242 209 155 / 0.75);
+  margin-bottom: 2px;
+}
+
+.shop-name {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff4de;
+}
+
+.shop-desc {
+  margin: 3px 0 0;
+  font-size: 0.76rem;
+  color: rgb(245 239 230 / 0.68);
+}
+
+/* Action buttons inside cards */
+.prog-btn {
+  padding: 7px 13px;
+  border-radius: 999px;
+  border: 1px solid rgb(242 209 155 / 0.4);
+  background: linear-gradient(135deg, #f3d292, #d8a452);
+  color: #1c150e;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.12s ease, opacity 0.12s ease;
+}
+
+.prog-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.prog-btn:disabled {
+  background: rgb(255 255 255 / 0.07);
+  border-color: rgb(255 255 255 / 0.12);
+  color: rgb(245 239 230 / 0.42);
+  cursor: default;
+}
+
+.prog-btn--equip {
+  background: rgb(242 209 155 / 0.15);
+  color: #ffe5b0;
+}
+
+.prog-btn--equipped {
+  background: rgb(72 180 125 / 0.24);
+  border-color: rgb(110 225 165 / 0.55);
+  color: #b8ffda;
+}
+
+/* Quick tools grid inside SettingsDialog */
+.settings-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}

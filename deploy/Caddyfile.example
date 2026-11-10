@@ -1,0 +1,6 @@
+# Block for your Caddy on the server. Replace the domain with the one you point (DNS A record) at the server.
+# The container name santinh-rt and port 3663 are fixed by deploy/compose.yml.
+rt.your-site.example {
+	encode zstd gzip
+	reverse_proxy santinh-rt:3663
+}

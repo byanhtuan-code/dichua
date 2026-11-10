@@ -1,0 +1,19 @@
+{
+  "name": "@santinh/server",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch --disable-warning=ExperimentalWarning src/main.ts",
+    "start": "node --disable-warning=ExperimentalWarning src/main.ts"
+  },
+  "dependencies": {
+    "@santinh/shared": "*",
+    "ws": "8.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "@types/ws": "8.18.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.12"
+  }
+}

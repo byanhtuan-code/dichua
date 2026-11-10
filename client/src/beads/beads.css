@@ -1,0 +1,90 @@
+/* Bead screen (design/beads.html). Transparent: the paper background and the strand are the 3D bead scene behind. */
+dialog.overlay.beads[open] {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  align-items: stretch;
+  justify-content: stretch;
+  gap: 0;
+  padding: 0;
+  /* Paper veil top and bottom: the strand fades out like the design's far beads, and text stays readable. */
+  background: linear-gradient(
+    to bottom,
+    rgb(236 231 220) 0,
+    rgb(236 231 220 / 0) 26%,
+    rgb(236 231 220 / 0) 70%,
+    rgb(236 231 220) 94%
+  );
+  color: #5c4a38;
+  text-align: initial;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  overscroll-behavior: contain;
+}
+.beads-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-4);
+}
+.beads-head h2 {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: 400;
+}
+.beads-head .glass {
+  color: #5c4a38;
+  background: rgb(255 255 255 / 0.45);
+  border-color: rgb(92 74 56 / 0.15);
+  box-shadow: none;
+}
+.beads-head .glass:hover:not(:disabled) {
+  background: rgb(255 255 255 / 0.65);
+}
+.beads-strand {
+  position: relative;
+  min-height: 0;
+}
+.beads-count {
+  position: absolute;
+  right: var(--space-8);
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: right;
+}
+.beads-count strong {
+  display: block;
+  font-size: var(--text-3xl);
+  font-weight: 500;
+  color: #6b5033;
+}
+.beads-count span {
+  font-size: var(--text-sm);
+  color: #7c6b57;
+}
+.beads-foot {
+  padding: var(--space-4) var(--space-4) var(--space-6);
+  text-align: center;
+  color: #76624c;
+  font-size: var(--text-sm);
+}
+.toasts.beads-toasts {
+  top: 80px;
+}
+/* Narrow: the strand fills the middle, so the count sits under it. */
+@media (max-width: 600px) {
+  .beads-count {
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: none;
+    text-align: center;
+  }
+}
+/* The bead scene replaces the world: hide the game chrome that would show through the transparent screen. */
+body:has(dialog.beads[open])
+  :is(.game-hud, .visitor-labels, .walk-chip, .toasts:not(.beads-toasts)) {
+  visibility: hidden;
+}

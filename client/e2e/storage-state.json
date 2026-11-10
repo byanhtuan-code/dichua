@@ -1,0 +1,68 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://localhost:4664",
+      "localStorage": [
+        {
+          "name": "santinh.name",
+          "value": "Khách thử"
+        }
+      ]
+    },
+    {
+      "origin": "http://localhost:4665",
+      "localStorage": [
+        {
+          "name": "santinh.name",
+          "value": "Khách thử"
+        }
+      ]
+    },
+    {
+      "origin": "http://localhost:4666",
+      "localStorage": [
+        {
+          "name": "santinh.name",
+          "value": "Khách thử"
+        }
+      ]
+    },
+    {
+      "origin": "http://localhost:4667",
+      "localStorage": [
+        {
+          "name": "santinh.name",
+          "value": "Khách thử"
+        }
+      ]
+    },
+    {
+      "origin": "http://localhost:4668",
+      "localStorage": [
+        {
+          "name": "santinh.name",
+          "value": "Khách thử"
+        }
+      ]
+    },
+    {
+      "origin": "http://localhost:4669",
+      "localStorage": [
+        {
+          "name": "santinh.name",
+          "value": "Khách thử"
+        }
+      ]
+    },
+    {
+      "origin": "http://localhost:4670",
+      "localStorage": [
+        {
+          "name": "santinh.name",
+          "value": "Khách thử"
+        }
+      ]
+    }
+  ]
+}

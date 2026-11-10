@@ -1,0 +1,45 @@
+.DS_Store
+node_modules/
+.next/
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.log
+coverage/
+playwright-report/
+test-results/
+web/.data/
+
+# site-forge
+_forge/capture/raw/
+_forge/capture/*-assets.json
+_forge/capture/assets/manifest.json
+_forge/capture/.chrome*
+_forge/logs/
+_phases/*/logs/
+_forge/origin/
+
+# research: third-party bundle + models, local only
+_forge/research/src/
+_forge/research/models/
+_forge/capture/.chrome*
+
+# build / tools
+dist/
+.wrangler/
+.vite/
+
+# asset build intermediates
+
+# not shipped with the source
+_forge/
+_phases/
+docs/
+.vercel/
+deploy/deploy.env
+
+# internal AI / workflow notes, not shipped
+.claude/
+CLAUDE.md
+AGENTS.md
