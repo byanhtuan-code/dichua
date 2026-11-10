@@ -26,8 +26,7 @@ import {
 import { ALTAR, CUSHION_COUNT, HALL, cushionPosition } from "@santinh/shared";
 import { registerCameraPreset } from "../debug/params.ts";
 import { radialTexture } from "../engine/radial-texture.ts";
-import { maxAnisotropy } from "../engine/renderer.ts";
-import { showBootError } from "../ui/boot.ts";
+import { IS_MOBILE, maxAnisotropy } from "../engine/renderer.ts";
 import type { Assets } from "./assets.ts";
 import { WALL_TOP } from "./hall-exterior.ts";
 import type { MaterialKey, Materials } from "./materials.ts";
@@ -40,8 +39,6 @@ const BUDDHA_HEIGHT = 5.35;
 const BUDDHA_FACE = 0.83;
 /** Statue sits a little behind ALTAR.z so its knees clear the offering table inside the altar footprint. */
 const BUDDHA_Z = ALTAR.z - 0.5;
-const PEDESTAL_HALF_W = 2.15;
-const PEDESTAL_HALF_D = 1.65;
 const MURAL_W = 16.8;
 const MURAL_H = 8.4;
 const MURAL_BOTTOM = HALL.floorY + 0.7;
@@ -86,6 +83,7 @@ export interface HallInterior {
 }
 
 export async function createHallInterior(scene: Scene, assets: Assets, materials: Materials): Promise<HallInterior> {
+  // Kick off the Buddha model download in parallel while the CPU constructs the hall geometries and mural.
   const buddhaPromise = assets.model("models/buddha.glb");
 
   const owned: Material[] = [];
@@ -117,12 +115,6 @@ export async function createHallInterior(scene: Scene, assets: Assets, materials
   box(batch, "darkWood", fx0, fx1, MURAL_BOTTOM + MURAL_H, MURAL_BOTTOM + MURAL_H + 0.3, fz0, fz1, 1, false);
   box(batch, "darkWood", fx0, fx0 + 0.3, MURAL_BOTTOM, MURAL_BOTTOM + MURAL_H, fz0, fz1, 1, false);
   box(batch, "darkWood", fx1 - 0.3, fx1, MURAL_BOTTOM, MURAL_BOTTOM + MURAL_H, fz0, fz1, 1, false);
-
-  // Stone pedestal + gilded lotus base built immediately so the hall doesn't wait for buddha.glb to download.
-  box(batch, "stone", -PEDESTAL_HALF_W, PEDESTAL_HALF_W, fy, PEDESTAL_TOP, BUDDHA_Z - PEDESTAL_HALF_D, BUDDHA_Z + PEDESTAL_HALF_D, 1.2, false);
-  const lotus = new CylinderGeometry(PEDESTAL_HALF_W * 0.92, PEDESTAL_HALF_W * 0.8, LOTUS_H, 28);
-  batch.add("gold", lotus, m4.makeTranslation(0, PEDESTAL_TOP + LOTUS_H / 2, BUDDHA_Z), { uvScale: [4, 1], castShadow: false });
-  lotus.dispose();
 
   // Offering table across the front of the altar.
   box(batch, "lacquer", TABLE.xMin, TABLE.xMax, TABLE.top - 0.12, TABLE.top, TABLE.z0, TABLE.z1, 1, false);
@@ -177,12 +169,12 @@ export async function createHallInterior(scene: Scene, assets: Assets, materials
   batch.add("darkWood", malletGeo, m4.makeTranslation(0.8, INCENSE_BASE_Y + 0.06, INCENSE_Z + 0.04), { castShadow: false });
   malletGeo.dispose();
 
-  const group = batch.build("hall-interior", { ...materials, gold, lacquer, cushion, candle });
-
-  // Use 1024x512 mural resolution for fast main-thread canvas drawing & instant GPU upload.
+  // Mural plane (1024x512 on mobile for fast boot & low VRAM, 2048x1024 on desktop).
   const faceY = PEDESTAL_TOP + LOTUS_H + BUDDHA_HEIGHT * BUDDHA_FACE;
   const haloY = faceY + 0.35;
-  const muralTex = drawMural(1024, 512, { x: 0.5, y: 1 - (haloY - MURAL_BOTTOM) / MURAL_H, r: 0.27 });
+  const muralW = IS_MOBILE ? 1024 : 2048;
+  const muralH = IS_MOBILE ? 512 : 1024;
+  const muralTex = drawMural(muralW, muralH, { x: 0.5, y: 1 - (haloY - MURAL_BOTTOM) / MURAL_H, r: 0.27 });
   muralTex.anisotropy = maxAnisotropy();
   const muralMat = own(new MeshStandardMaterial({ map: muralTex, roughness: 0.85, emissiveMap: muralTex, emissive: new Color(0x3b1f0e) }));
   const muralGeo = new PlaneGeometry(MURAL_W, MURAL_H);
@@ -192,7 +184,6 @@ export async function createHallInterior(scene: Scene, assets: Assets, materials
   mural.matrixAutoUpdate = false;
   mural.updateMatrix();
   mural.name = "mural";
-  group.add(mural);
 
   // Flames: instanced, flickering in the vertex shader.
   const flameGeo = new SphereGeometry(0.05, 8, 6);
@@ -222,7 +213,6 @@ export async function createHallInterior(scene: Scene, assets: Assets, materials
   flames.matrixAutoUpdate = false;
   flames.updateMatrix();
   flames.name = "candle-flames";
-  group.add(flames);
 
   // Incense glowing embers + rising smoke particles (single Points draw call).
   const smokeTex = radialTexture();
@@ -251,7 +241,6 @@ export async function createHallInterior(scene: Scene, assets: Assets, materials
   embers.matrixAutoUpdate = false;
   embers.updateMatrix();
   embers.name = "incense-embers";
-  group.add(embers);
 
   const smokePositions = new Float32Array(SMOKE_COUNT * 3);
   const smokeGeo = new BufferGeometry();
@@ -272,7 +261,6 @@ export async function createHallInterior(scene: Scene, assets: Assets, materials
   const smoke = new Points(smokeGeo, smokeMat);
   smoke.name = "incense-smoke";
   smoke.frustumCulled = false;
-  group.add(smoke);
 
   let incenseBoost = 0;
 
@@ -303,7 +291,6 @@ export async function createHallInterior(scene: Scene, assets: Assets, materials
   cords.updateMatrix();
   lanterns.name = "lanterns";
   cords.name = "lantern-cords";
-  group.add(lanterns, cords);
 
   // 30 cushions on the cushionPosition grid.
   const cushionGeo = new CylinderGeometry(0.46, 0.5, 0.14, 20);
@@ -321,10 +308,43 @@ export async function createHallInterior(scene: Scene, assets: Assets, materials
   cushions.matrixAutoUpdate = false;
   cushions.updateMatrix();
   cushions.name = "cushions";
-  group.add(cushions);
 
-  // Lights: two warm spots on the statue with bounded 18 m range (so outdoor pixels don't evaluate them),
-  // plus warm fills that dim to 0 when the hall is behind the camera.
+  // Wait for the Buddha statue so all hall items are 100% present before the gate opens.
+  const buddha = await buddhaPromise;
+
+  // Stone pedestal + gilded lotus base.
+  const bbox = new Box3().setFromObject(buddha.scene);
+  const size = bbox.getSize(new Vector3());
+  const scale = BUDDHA_HEIGHT / size.y;
+  const halfW = (size.x * scale) / 2 + 0.4;
+  const halfD = (size.z * scale) / 2 + 0.3;
+  box(batch, "stone", -halfW, halfW, fy, PEDESTAL_TOP, BUDDHA_Z - halfD, BUDDHA_Z + halfD, 1.2, false);
+  const lotus = new CylinderGeometry(halfW * 0.92, halfW * 0.8, LOTUS_H, 28);
+  batch.add("gold", lotus, m4.makeTranslation(0, PEDESTAL_TOP + LOTUS_H / 2, BUDDHA_Z), { uvScale: [4, 1], castShadow: false });
+  lotus.dispose();
+
+  const group = batch.build("hall-interior", { ...materials, gold, lacquer, cushion, candle });
+  group.add(mural);
+
+  const statue = buddha.scene;
+  statue.scale.setScalar(scale);
+  statue.position.set(-((bbox.min.x + bbox.max.x) / 2) * scale, PEDESTAL_TOP + LOTUS_H - bbox.min.y * scale, BUDDHA_Z - ((bbox.min.z + bbox.max.z) / 2) * scale);
+  const aniso = maxAnisotropy();
+  statue.traverse((o) => {
+    if (o instanceof Mesh) {
+      o.castShadow = false;
+      o.receiveShadow = true;
+      const m = o.material as MeshStandardMaterial;
+      if (m.map) m.map.anisotropy = aniso;
+      if (m.normalMap) m.normalMap.anisotropy = aniso;
+      m.roughness = 0.46;
+      m.metalness = 0.2;
+      m.emissive = new Color(0x281808);
+    }
+  });
+  statue.name = "buddha";
+  group.add(statue, flames, embers, smoke, lanterns, cords, cushions);
+
   const faceTarget = new Object3D();
   faceTarget.position.set(0, faceY - 0.6, BUDDHA_Z);
   group.add(faceTarget);
@@ -343,55 +363,6 @@ export async function createHallInterior(scene: Scene, assets: Assets, materials
     p.position.set(0, LANTERN_Y - 0.6, z);
     fills.push(p);
     group.add(p);
-  }
-
-  let disposed = false;
-  let loadedStatue: Object3D | null = null;
-
-  const mountBuddha = (statue: Object3D): void => {
-    if (disposed) return;
-    const bbox = new Box3().setFromObject(statue);
-    const size = bbox.getSize(new Vector3());
-    const scale = BUDDHA_HEIGHT / (size.y || 1);
-    statue.scale.setScalar(scale);
-    statue.position.set(
-      -((bbox.min.x + bbox.max.x) / 2) * scale,
-      PEDESTAL_TOP + LOTUS_H - bbox.min.y * scale,
-      BUDDHA_Z - ((bbox.min.z + bbox.max.z) / 2) * scale,
-    );
-    const aniso = maxAnisotropy();
-    statue.traverse((o) => {
-      if (o instanceof Mesh) {
-        o.castShadow = false;
-        o.receiveShadow = true;
-        const m = o.material as MeshStandardMaterial;
-        if (m.map) m.map.anisotropy = aniso;
-        if (m.normalMap) m.normalMap.anisotropy = aniso;
-        m.roughness = 0.46;
-        m.metalness = 0.2;
-        m.emissive = new Color(0x281808);
-      }
-    });
-    statue.name = "buddha";
-    loadedStatue = statue;
-    group.add(statue);
-    statue.updateMatrixWorld(true);
-  };
-
-  const eager = typeof location !== "undefined" && /[?&](e2e|cam)=/.test(location.search);
-  if (eager) {
-    const buddha = await buddhaPromise;
-    mountBuddha(buddha.scene);
-  } else {
-    void buddhaPromise.then(
-      (buddha) => mountBuddha(buddha.scene),
-      (err: unknown) => {
-        if (!disposed) {
-          console.error(err);
-          showBootError("load");
-        }
-      },
-    );
   }
 
   group.updateMatrixWorld(true);
@@ -436,9 +407,8 @@ export async function createHallInterior(scene: Scene, assets: Assets, materials
       smokeAttr.needsUpdate = true;
     },
     dispose() {
-      disposed = true;
       scene.remove(group);
-      loadedStatue?.traverse((o) => {
+      statue.traverse((o) => {
         if (!(o instanceof Mesh)) return;
         const m = o.material as MeshStandardMaterial;
         m.map?.dispose();
