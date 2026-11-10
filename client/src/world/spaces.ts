@@ -40,9 +40,12 @@ interface SpaceScene {
 }
 
 async function buildTichMacDuong({ scene, assets }: SceneContext): Promise<BuiltScene> {
+  // Fire all network requests at t=0 so ground textures, PBR material maps, and buddha.glb download in parallel over HTTP/2.
   const groundPromise = createGround(scene, assets);
   const materialsPromise = createMaterials(assets);
+  const buddhaPromise = assets.model("models/buddha.glb");
 
+  // Build procedural, texture-independent scenery on the CPU while network transfers are in flight.
   const regions = new Regions(scene);
   const wishingTree = createWishingTree(regions.group("gate"));
   const grass = createGrass(regions);
@@ -56,6 +59,7 @@ async function buildTichMacDuong({ scene, assets }: SceneContext): Promise<Built
     createGarden(scene, assets, materials, regions),
     createHallInterior(scene, assets, materials),
     groundPromise,
+    buddhaPromise,
   ]);
   regions.track("hall", interior.group);
 
