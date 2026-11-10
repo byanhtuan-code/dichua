@@ -2,6 +2,7 @@ import { createServer, type IncomingMessage, type Server, type ServerResponse } 
 import type { Duplex } from "node:stream";
 import { readFile, stat } from "node:fs/promises";
 import { extname, join, normalize, resolve, sep } from "node:path";
+import { gzipSync } from "node:zlib";
 import { MAX_FRAME_BYTES, normalizeVisitorName, parseNearId, parseResumeToken, roomNumber, type ServerMsg } from "@santinh/shared";
 import { WebSocketServer } from "ws";
 import { createAccountHandler } from "./account-http.ts";
@@ -30,6 +31,20 @@ const MIME: Readonly<Record<string, string>> = {
   ".ico": "image/x-icon",
 };
 
+/** Extensions that benefit heavily from Gzip and are small enough to keep pre-compressed in memory. */
+const COMPRESSIBLE_EXT = new Set([".html", ".js", ".css", ".json", ".svg", ".txt"]);
+/** Vite hashed bundles under `/assets/name-hash.ext` never change and can be cached forever by browsers. */
+const IMMUTABLE_ASSET_RE = /^\/assets\/.+-[a-zA-Z0-9_-]{8,}\.[a-z0-9]+$/i;
+
+interface CachedTextAsset {
+  etag: string;
+  raw: Buffer;
+  gzip: Buffer;
+}
+
+const staticTextCache = new Map<string, CachedTextAsset>();
+const MAX_STATIC_CACHE_ENTRIES = 64;
+
 function json(res: ServerResponse, status: number, body: unknown, headers: Record<string, string> = {}): void {
   res.writeHead(status, { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", ...headers });
   res.end(JSON.stringify(body));
@@ -40,7 +55,7 @@ function reject(socket: Duplex, status: number, reason: string): void {
   socket.destroy();
 }
 
-async function serveStatic(root: string, urlPath: string, res: ServerResponse): Promise<void> {
+async function serveStatic(root: string, req: IncomingMessage, urlPath: string, res: ServerResponse): Promise<void> {
   let rel: string;
   try {
     rel = decodeURIComponent(urlPath);
@@ -59,9 +74,67 @@ async function serveStatic(root: string, urlPath: string, res: ServerResponse): 
     return;
   }
   try {
-    if ((await stat(file)).isDirectory()) file = join(file, "index.html");
+    let st = await stat(file);
+    if (st.isDirectory()) {
+      file = join(file, "index.html");
+      st = await stat(file);
+    }
+    const ext = extname(file).toLowerCase();
+    const contentType = MIME[ext] ?? "application/octet-stream";
+    const etag = `W/"${st.size.toString(16)}-${Math.trunc(st.mtimeMs).toString(16)}"`;
+    const cacheControl =
+      ext === ".html"
+        ? "no-cache"
+        : IMMUTABLE_ASSET_RE.test(rel)
+          ? "public, max-age=31536000, immutable"
+          : "public, max-age=86400, stale-while-revalidate=604800";
+
+    if (req.headers["if-none-match"] === etag) {
+      res.writeHead(304, { "cache-control": cacheControl, etag }).end();
+      return;
+    }
+
+    if (COMPRESSIBLE_EXT.has(ext) && st.size >= 512 && st.size <= 5 * 1024 * 1024) {
+      let cached = staticTextCache.get(file);
+      if (!cached || cached.etag !== etag) {
+        const raw = await readFile(file);
+        const gzip = gzipSync(raw, { level: 6 });
+        if (staticTextCache.size >= MAX_STATIC_CACHE_ENTRIES) staticTextCache.clear();
+        cached = { etag, raw, gzip };
+        staticTextCache.set(file, cached);
+      }
+      const acceptsGzip = /\bgzip\b/i.test(String(req.headers["accept-encoding"] ?? ""));
+      const payload = acceptsGzip ? cached.gzip : cached.raw;
+      const headers: Record<string, string> = {
+        "content-type": contentType,
+        "content-length": String(payload.byteLength),
+        "cache-control": cacheControl,
+        etag,
+        vary: "Accept-Encoding",
+      };
+      if (acceptsGzip) headers["content-encoding"] = "gzip";
+      res.writeHead(200, headers);
+      res.end(req.method === "HEAD" ? undefined : payload);
+      return;
+    }
+
+    if (req.method === "HEAD") {
+      res.writeHead(200, {
+        "content-type": contentType,
+        "content-length": String(st.size),
+        "cache-control": cacheControl,
+        etag,
+      }).end();
+      return;
+    }
+
     const body = await readFile(file);
-    res.writeHead(200, { "content-type": MIME[extname(file).toLowerCase()] ?? "application/octet-stream" });
+    res.writeHead(200, {
+      "content-type": contentType,
+      "content-length": String(body.byteLength),
+      "cache-control": cacheControl,
+      etag,
+    });
     res.end(body);
   } catch {
     res.writeHead(404, { "content-type": "text/plain; charset=utf-8" }).end("Not found");
@@ -138,7 +211,7 @@ export function createAppServer(
         return;
       }
       if (config.staticDir && (req.method === "GET" || req.method === "HEAD")) {
-        await serveStatic(config.staticDir, url.pathname, res);
+        await serveStatic(config.staticDir, req, url.pathname, res);
         return;
       }
       res.writeHead(404, { "content-type": "text/plain; charset=utf-8" }).end("Not found");
