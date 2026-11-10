@@ -968,6 +968,19 @@ export async function start(): Promise<void> {
     const selfState: NonNullable<E2EState["self"]> = { position: { ...movement.position }, pose: self.pose, cushion: null, asleep: false };
     e2eState.self = selfState;
 
+    // Position the player, camera, lights, and region visibility for the spawn view and pre-compile all GPU shaders/textures
+    // while the boot overlay is still covering the canvas, so frame 1 has zero white flash or missing items.
+    const initialY = space.groundY(spawn.x, spawn.z);
+    self.object.position.set(spawn.x, initialY, spawn.z);
+    self.object.rotation.y = spawn.yaw;
+    contacts.place(0, spawn.x, initialY, spawn.z);
+    if (!fixedCamera) rig.update(0, spawn.x, initialY, spawn.z, movement.heading);
+    env.setFocus(spawn.x, initialY, spawn.z);
+    env.update(0, camera);
+    scenery.update(0, 0, env.daylight, camera);
+    activeRenderer.compile(scene, camera);
+    activeRenderer.render(scene, camera);
+
     const beadsShown = (): BeadsScene | null => (beadsScreen.isOpen ? beadsScene : null);
     loop = new Loop(
       renderer,
@@ -1066,11 +1079,15 @@ export async function start(): Promise<void> {
     });
 
     loop.onFirstFrame(() => {
-      hideBoot();
-      e2eState.ready = true;
-      firstFrameShown = true;
-      // Rest / exit may already have taken over (hidden tab); `resume` asks then. A saved session answers first.
-      if (!entered && !suspended && accountChecked) askName();
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          hideBoot();
+          e2eState.ready = true;
+          firstFrameShown = true;
+          // Rest / exit may already have taken over (hidden tab); `resume` asks then. A saved session answers first.
+          if (!entered && !suspended && accountChecked) askName();
+        });
+      });
     });
     loop.start();
   } catch (err) {
