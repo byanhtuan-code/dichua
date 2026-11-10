@@ -40,28 +40,32 @@ interface SpaceScene {
 }
 
 async function buildTichMacDuong({ scene, assets }: SceneContext): Promise<BuiltScene> {
-  // Kick off all required network downloads in parallel (cothu.glb and cothu1.glb are completely removed!).
-  const [, materials] = await Promise.all([
-    createGround(scene, assets),
-    createMaterials(assets),
-    assets.model("models/buddha.glb"),
-  ]);
+  // Start all network downloads at t=0 so ground textures, PBR material textures, and buddha.glb (+ Draco decoder) transfer concurrently.
+  const groundPromise = createGround(scene, assets);
+  const materialsPromise = createMaterials(assets);
+  const buddhaPromise = assets.model("models/buddha.glb");
 
-  const exterior = createHallExterior(scene, materials);
+  // Build procedural, texture-independent scenery on the CPU while network requests are in flight.
   const regions = new Regions(scene);
+  const wishingTree = createWishingTree(regions.group("gate"));
+  const grass = createGrass(regions);
+  const nature = createNature(scene);
+
+  // As soon as PBR materials resolve, build exterior, garden/forest, pond, and hall interior without waiting for buddha.glb first.
+  const materials = await materialsPromise;
+  const exterior = createHallExterior(scene, materials);
   regions.track("hall", exterior.group);
 
-  const [interior, garden] = await Promise.all([
-    createHallInterior(scene, assets, materials),
+  const [garden, interior] = await Promise.all([
     createGarden(scene, assets, materials, regions),
+    createHallInterior(scene, assets, materials),
+    groundPromise,
+    buddhaPromise,
   ]);
   regions.track("hall", interior.group);
 
   const pond = createPond(regions.group("garden-east"), materials, scene.fog?.color ?? new Color());
-  const wishingTree = createWishingTree(regions.group("gate"));
-  const grass = createGrass(regions);
   const glow = createLanternGlow(scene, garden.lanterns);
-  const nature = createNature(scene);
   regions.finalize();
 
   return {
