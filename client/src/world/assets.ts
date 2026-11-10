@@ -35,6 +35,7 @@ export class Assets {
   private readonly modelCache = new Map<string, Promise<GLTF>>();
   private readonly textureCache = new Map<string, Promise<Texture>>();
   private readonly owned = new Set<Texture>();
+  private dracoPreloaded = false;
 
   constructor(onProgress?: (loaded: number, total: number) => void) {
     this.manager = new LoadingManager();
@@ -53,6 +54,10 @@ export class Assets {
     const url = ASSET_BASE + clean;
     let pending = this.modelCache.get(url);
     if (!pending) {
+      if (!this.dracoPreloaded) {
+        this.dracoPreloaded = true;
+        this.draco.preload();
+      }
       pending = this.gltf.loadAsync(url).catch((err: unknown) => {
         this.modelCache.delete(url);
         throw new AssetLoadError(url, err);
