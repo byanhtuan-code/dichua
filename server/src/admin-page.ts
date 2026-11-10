@@ -1,5 +1,5 @@
 export const ADMIN_PAGE_CSP =
-  "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'";
+  "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'self'";
 
 export const ADMIN_PAGE_HTML = `<!doctype html>
 <html lang="vi">
@@ -323,17 +323,17 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
     <section id="login-view" class="card login-box">
       <h2>Đăng nhập Quản trị</h2>
       <p class="desc">Nhập tài khoản và mật khẩu quản trị để mở bảng điều khiển.</p>
-      <form id="login-form">
+      <form id="login-form" action="javascript:void(0);">
         <div class="field">
           <label for="login-user">Tài khoản</label>
-          <input id="login-user" type="text" autocomplete="username" value="admin" required />
+          <input id="login-user" type="text" autocomplete="username" value="admin" />
         </div>
         <div class="field">
           <label for="login-pw">Mật khẩu</label>
-          <input id="login-pw" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu..." required />
+          <input id="login-pw" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu (ví dụ: 681995)..." />
         </div>
         <div class="row-actions">
-          <button type="submit" id="btn-login" style="width:100%;">Vào trang Quản trị</button>
+          <button type="button" id="btn-login" style="width:100%;">Vào trang Quản trị</button>
         </div>
         <div id="login-msg" class="status-msg" role="status"></div>
       </form>
@@ -510,6 +510,11 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
     };
     var TIER_KEYS = ["full", "high", "medium", "low"];
 
+    // Lưu phiên trên cả RAM để hoạt động ngay cả khi trình duyệt hoặc iframe tên miền khóa sessionStorage
+    var memUser = "admin";
+    var memPw = "";
+    var authMode = "pair"; // "pair" = Bearer user:pw, "pw" = Bearer pw
+
     var loginView = document.getElementById("login-view");
     var appView = document.getElementById("app-view");
     var topActions = document.getElementById("top-actions");
@@ -517,6 +522,7 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
     var loginForm = document.getElementById("login-form");
     var loginUser = document.getElementById("login-user");
     var loginPw = document.getElementById("login-pw");
+    var btnLogin = document.getElementById("btn-login");
     var loginMsg = document.getElementById("login-msg");
 
     var statReal = document.getElementById("stat-real");
@@ -528,23 +534,31 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
     var refreshTimer = null;
 
     function getCreds() {
+      if (memPw) {
+        return { user: memUser || "admin", pw: memPw };
+      }
       try {
         var u = sessionStorage.getItem(STORAGE_USER) || "admin";
         var p = sessionStorage.getItem(STORAGE_PW) || "";
+        memUser = u;
+        memPw = p;
         return { user: u, pw: p };
       } catch (_e) {
-        return { user: "admin", pw: "" };
+        return { user: memUser || "admin", pw: memPw || "" };
       }
     }
 
     function setCreds(user, pw) {
+      memUser = user || "admin";
+      memPw = pw || "";
       try {
-        sessionStorage.setItem(STORAGE_USER, user);
-        sessionStorage.setItem(STORAGE_PW, pw);
+        sessionStorage.setItem(STORAGE_USER, memUser);
+        sessionStorage.setItem(STORAGE_PW, memPw);
       } catch (_e) {}
     }
 
     function clearCreds() {
+      memPw = "";
       try {
         sessionStorage.removeItem(STORAGE_USER);
         sessionStorage.removeItem(STORAGE_PW);
@@ -557,18 +571,34 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
       el.className = "status-msg" + (kind ? " " + kind : "");
     }
 
-    function api(path, opts) {
-      opts = opts || {};
+    function rawFetch(path, opts, mode) {
       var creds = getCreds();
-      var headers = Object.assign({}, opts.headers || {});
-      headers["authorization"] = "Bearer " + creds.user + ":" + creds.pw;
-      if (opts.body !== undefined) {
+      var headers = Object.assign({}, (opts && opts.headers) || {});
+      headers["authorization"] =
+        mode === "pw" ? "Bearer " + creds.pw : "Bearer " + creds.user + ":" + creds.pw;
+      if (opts && opts.body !== undefined) {
         headers["content-type"] = "application/json";
       }
       return fetch(path, {
-        method: opts.method || "GET",
+        method: (opts && opts.method) || "GET",
         headers: headers,
-        body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined
+        body: opts && opts.body !== undefined ? JSON.stringify(opts.body) : undefined
+      });
+    }
+
+    function api(path, opts) {
+      opts = opts || {};
+      return rawFetch(path, opts, authMode).then(function (res) {
+        if (res.status === 401) {
+          var altMode = authMode === "pair" ? "pw" : "pair";
+          return rawFetch(path, opts, altMode).then(function (retryRes) {
+            if (retryRes.ok) {
+              authMode = altMode;
+            }
+            return retryRes;
+          });
+        }
+        return res;
       });
     }
 
@@ -576,6 +606,10 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
       appView.hidden = true;
       topActions.hidden = true;
       loginView.hidden = false;
+      if (btnLogin) {
+        btnLogin.disabled = false;
+        btnLogin.textContent = "Vào trang Quản trị";
+      }
       if (refreshTimer) {
         clearInterval(refreshTimer);
         refreshTimer = null;
@@ -587,6 +621,10 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
       loginView.hidden = true;
       appView.hidden = false;
       topActions.hidden = false;
+      if (btnLogin) {
+        btnLogin.disabled = false;
+        btnLogin.textContent = "Vào trang Quản trị";
+      }
       adminBadge.textContent = "Admin: " + user;
       startAutoRefresh();
     }
@@ -626,6 +664,7 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
     }
 
     function renderOverview(data) {
+      if (!data) return;
       statReal.textContent = String(data.totalReal || 0);
       statBots.textContent = String(data.totalBots || 0);
       liveRoomsList.replaceChildren();
@@ -853,6 +892,7 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
     var accSearchInput = document.getElementById("acc-search");
 
     function renderAccounts(data) {
+      if (!data) return;
       statAccounts.textContent = String(data.total || 0);
       accTbody.replaceChildren();
       var list = data.accounts || [];
@@ -1053,12 +1093,14 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
     var popLimitsDesc = document.getElementById("pop-limits-desc");
 
     function getTierObj(cfg, key, idx) {
+      if (!cfg) return {};
       if (cfg.tiers && Array.isArray(cfg.tiers)) return cfg.tiers[idx] || {};
       if (cfg.tiers && typeof cfg.tiers === "object") return cfg.tiers[key] || {};
       return cfg[key] || {};
     }
 
     function fillPopForm(cfg, limits) {
+      if (!cfg) return;
       popTbody.replaceChildren();
       if (limits) {
         popLimitsDesc.textContent =
@@ -1155,7 +1197,7 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
             loadOverview();
           });
         }
-        setStatus(popMsg, "Cấu hình không hợp lệ (tổng số phòng phải bằng 10 và Bot thấp <= Bot cao).", "err");
+        setStatus(popMsg, "Cấu hình không hợp lệ (tổng số phòng phải bằng 10 và Bot thấp không vượt Bot cao).", "err");
       });
     });
 
@@ -1173,6 +1215,7 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
     var namesDesc = document.getElementById("names-desc");
 
     function fillNamesForm(names, maxChars) {
+      if (!names || !Array.isArray(names)) return;
       namesGrid.replaceChildren();
       if (maxChars) {
         namesDesc.textContent = "Đặt tên hiển thị cho 10 phòng (1.." + maxChars + " ký tự, không trùng nhau).";
@@ -1255,7 +1298,11 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
         showLogin("", "");
         return;
       }
-      setStatus(loginMsg, "Đang xác thực...", "warn");
+      if (btnLogin) {
+        btnLogin.disabled = true;
+        btnLogin.textContent = "Đang xác thực...";
+      }
+      setStatus(loginMsg, "Đang kết nối máy chủ quản trị...", "warn");
       api("/api/admin/population").then(function (res) {
         if (res.status === 401) {
           clearCreds();
@@ -1268,37 +1315,71 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
           return;
         }
         if (!res.ok) {
-          showLogin("Không thể kết nối máy chủ quản trị (HTTP " + res.status + ").", "err");
+          showLogin("Máy chủ từ chối truy cập (HTTP " + res.status + "). Hãy kiểm tra biến ADMIN_PASSWORD trên Northflank.", "err");
           return;
         }
         return res.json().then(function (pop) {
           popData = pop;
-          fillPopForm(pop.config, pop.limits);
           showApp(creds.user);
+          try {
+            fillPopForm(pop.config || pop, pop.limits);
+          } catch (err) {
+            console.error(err);
+          }
           return Promise.all([
-            api("/api/admin/rooms").then(function (r) { return r.ok ? r.json() : null; }),
+            api("/api/admin/rooms").then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
             loadOverview(),
             loadAccounts()
           ]);
         }).then(function (results) {
           if (results && results[0]) {
             roomNamesData = results[0];
-            fillNamesForm(roomNamesData.names, roomNamesData.maxChars);
+            try {
+              fillNamesForm(roomNamesData.names, roomNamesData.maxChars);
+            } catch (err) {
+              console.error(err);
+            }
           }
         });
-      }).catch(function () {
-        showLogin("Lỗi kết nối mạng tới máy chủ.", "err");
+      }).catch(function (err) {
+        console.error(err);
+        showLogin("Lỗi kết nối tới máy chủ. Nếu dùng tên miền dichua.asia, hãy trỏ CNAME/URL trực tiếp thay vì Frame Redirect.", "err");
       });
     }
 
-    loginForm.addEventListener("submit", function (ev) {
-      ev.preventDefault();
-      var u = loginUser.value.trim() || "admin";
-      var p = loginPw.value;
-      if (!p) return;
+    function handleLoginAttempt(ev) {
+      if (ev) ev.preventDefault();
+      var u = (loginUser && loginUser.value ? loginUser.value.trim() : "") || "admin";
+      var p = loginPw && loginPw.value ? loginPw.value.trim() : "";
+      if (!p) {
+        setStatus(loginMsg, "Vui lòng nhập mật khẩu quản trị.", "warn");
+        if (loginPw) loginPw.focus();
+        return;
+      }
       setCreds(u, p);
       bootstrapAll();
-    });
+    }
+
+    if (btnLogin) {
+      btnLogin.addEventListener("click", handleLoginAttempt);
+    }
+    if (loginForm) {
+      loginForm.addEventListener("submit", handleLoginAttempt);
+    }
+    if (loginPw) {
+      loginPw.addEventListener("keydown", function (ev) {
+        if (ev.key === "Enter") {
+          handleLoginAttempt(ev);
+        }
+      });
+    }
+    if (loginUser) {
+      loginUser.addEventListener("keydown", function (ev) {
+        if (ev.key === "Enter") {
+          handleLoginAttempt(ev);
+        }
+      });
+    }
 
     bootstrapAll();
   })();
