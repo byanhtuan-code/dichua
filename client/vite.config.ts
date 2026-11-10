@@ -42,6 +42,21 @@ export default defineConfig({
     proxy: { "/ws": { target: "http://localhost:4663", ws: true }, "/api": "http://localhost:4663" },
   },
   preview: { port: PORT, strictPort: true },
-  // three.js alone is ~550 kB minified; it loads lazily behind the boot screen like the source site's game.js.
-  build: { chunkSizeWarningLimit: 800 },
+  // Split Three.js core and addons into immutable vendor chunks so they download in parallel and stay cached across game updates.
+  build: {
+    chunkSizeWarningLimit: 800,
+    rollupOptions: {
+      output: {
+        manualChunks(id: string): string | undefined {
+          if (id.includes("node_modules/three/examples/") || id.includes("node_modules\\three\\examples\\")) {
+            return "three-addons";
+          }
+          if (id.includes("node_modules/three/") || id.includes("node_modules\\three\\")) {
+            return "three-core";
+          }
+          return undefined;
+        },
+      },
+    },
+  },
 });
