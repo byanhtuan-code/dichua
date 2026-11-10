@@ -100,13 +100,17 @@ export async function createEnvironment(
   assets: Assets,
   opts: { shadows: boolean; now: () => number },
 ): Promise<Environment> {
+  // Set fog and lights synchronously first so `buildSpace` can run in parallel and read `scene.fog.color` immediately.
+  const fog = new Fog(DAY.fog.clone(), DAY.fogNear, DAY.fogFar);
+  scene.fog = fog;
+  scene.background = fog.color;
+
   const panorama = await assets.texture("env/woodland.jpg", { srgb: true });
   panorama.mapping = EquirectangularReflectionMapping;
 
   // A textured inner sphere instead of scene.background so the panorama can be tinted for night.
   const skyGeo = new SphereGeometry(SKY_RADIUS, 48, 24);
   const skyMat = new MeshBasicMaterial({ map: panorama, side: BackSide, fog: false, depthWrite: false });
-  const fog = new Fog(DAY.fog.clone(), DAY.fogNear, DAY.fogFar);
   skyMat.onBeforeCompile = (shader) => {
     shader.uniforms["uHaze"] = { value: fog.color };
     shader.vertexShader = shader.vertexShader
@@ -124,9 +128,6 @@ export async function createEnvironment(
   sky.frustumCulled = false;
   sky.name = "sky";
   scene.add(sky);
-
-  scene.fog = fog;
-  scene.background = fog.color;
 
   const hemi = new HemisphereLight(DAY.hemiSky, DAY.hemiGround, DAY.hemiIntensity);
   const ambient = new AmbientLight(DAY.ambient, DAY.ambientIntensity);
