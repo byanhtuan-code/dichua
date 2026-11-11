@@ -19,6 +19,7 @@ const MIME: Readonly<Record<string, string>> = {
   ".js": "text/javascript; charset=utf-8",
   ".css": "text/css; charset=utf-8",
   ".json": "application/json; charset=utf-8",
+  ".xml": "application/xml; charset=utf-8",
   ".svg": "image/svg+xml",
   ".png": "image/png",
   ".jpg": "image/jpeg",
@@ -31,8 +32,26 @@ const MIME: Readonly<Record<string, string>> = {
   ".ico": "image/x-icon",
 };
 
+const ROBOTS_TXT = `User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+Sitemap: https://dichua.asia/sitemap.xml
+`;
+
+const SITEMAP_XML = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://dichua.asia/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>
+`;
+
 /** Extensions that benefit heavily from Gzip and are small enough to keep pre-compressed in memory. */
-const COMPRESSIBLE_EXT = new Set([".html", ".js", ".css", ".json", ".svg", ".txt"]);
+const COMPRESSIBLE_EXT = new Set([".html", ".js", ".css", ".json", ".xml", ".svg", ".txt"]);
 /** Vite hashed bundles under `/assets/name-hash.ext` never change and can be cached forever by browsers. */
 const IMMUTABLE_ASSET_RE = /^\/assets\/.+-[a-zA-Z0-9_-]{8,}\.[a-z0-9]+$/i;
 
@@ -210,9 +229,27 @@ export function createAppServer(
         }
         return;
       }
-      if (config.staticDir && (req.method === "GET" || req.method === "HEAD")) {
-        await serveStatic(config.staticDir, req, url.pathname, res);
-        return;
+      if (req.method === "GET" || req.method === "HEAD") {
+        if (url.pathname === "/robots.txt") {
+          res.writeHead(200, {
+            "content-type": "text/plain; charset=utf-8",
+            "cache-control": "public, max-age=86400",
+          });
+          res.end(req.method === "HEAD" ? undefined : ROBOTS_TXT);
+          return;
+        }
+        if (url.pathname === "/sitemap.xml") {
+          res.writeHead(200, {
+            "content-type": "application/xml; charset=utf-8",
+            "cache-control": "public, max-age=86400",
+          });
+          res.end(req.method === "HEAD" ? undefined : SITEMAP_XML);
+          return;
+        }
+        if (config.staticDir) {
+          await serveStatic(config.staticDir, req, url.pathname, res);
+          return;
+        }
       }
       res.writeHead(404, { "content-type": "text/plain; charset=utf-8" }).end("Not found");
     };
