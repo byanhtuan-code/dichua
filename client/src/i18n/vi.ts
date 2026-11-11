@@ -5,16 +5,20 @@ const needAccount = "Tạo tài khoản để trò chuyện cùng mọi người
 
 export const vi = {
   meta: {
-    title: "Sân Tĩnh — ngồi yên cùng nhau",
-    description: "Khuôn viên chùa 3D ngay trên trình duyệt: đi dạo trong vườn, lạy Phật, lần tràng hạt và ngồi yên cùng người khác.",
-    noscript: "Sân Tĩnh cần bật JavaScript để mở khung cảnh 3D.",
+    title: "Đi Chùa Online — Sân Tĩnh (Chùa Sơn Tịnh) · Không Gian Chùa 3D Tĩnh Tâm",
+    description:
+      "Đi chùa online, lễ Phật 3D ngay trên trình duyệt tại Sân Tĩnh (Chùa Sơn Tịnh): dâng hương, thỉnh chuông, gõ mõ, lần tràng hạt, xin xăm pháp ngữ, thả hoa đăng và ngồi yên cùng mọi người.",
+    keywords:
+      "đi chùa, chùa online, đi chùa online, lễ phật online, chùa 3d, sân tĩnh, chùa sơn tịnh, gõ mõ online, lần tràng hạt, tụng kinh online, xin xăm online, thả hoa đăng, cầu bình an",
+    noscript:
+      "Sân Tĩnh (Chùa Sơn Tịnh) — Không gian đi chùa online 3D trên trình duyệt: đi dạo sân chùa, dâng hương lễ Phật, thỉnh đại hồng chung, gõ mõ tịnh tâm, lần tràng hạt, rút thẻ pháp ngữ, thả đèn hoa đăng và treo thẻ ước nguyện trên Cây Bồ Đề. Vui lòng bật JavaScript để mở khung cảnh chùa 3D.",
   },
   /** Text on the social preview image (`npm run og -w client`). */
   og: {
-    title: "Sân Tĩnh",
+    title: "Sân Tĩnh · Đi Chùa Online",
     tagline: "Ngồi yên cùng nhau",
-    line: "Khuôn viên chùa 3D ngay trên trình duyệt. Đi dạo, lạy Phật, lần tràng hạt cùng người khác.",
-    alt: "Lối đá có đèn lồng dẫn vào chánh điện về đêm, tượng Phật sáng phía trong",
+    line: "Khuôn viên chùa 3D ngay trên trình duyệt. Đi chùa online, dâng hương, lạy Phật, lần tràng hạt cùng người khác.",
+    alt: "Lối đá có đèn lồng dẫn vào chánh điện về đêm tại Chùa Online 3D Sân Tĩnh",
   },
   boot: {
     title: "Sân Tĩnh",
