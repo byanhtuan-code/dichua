@@ -5,8 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{{vi.meta.title}}</title>
 <meta name="description" content="{{vi.meta.description}}">
+<meta name="keywords" content="{{vi.meta.keywords}}">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="author" content="Sân Tĩnh · Chùa Sơn Tịnh Online">
+<meta name="application-name" content="Đi Chùa Online · Sân Tĩnh">
 <meta name="theme-color" content="#20251f">
+<link rel="canonical" href="{{site}}/">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Đi Chùa Online · Sân Tĩnh (Chùa Sơn Tịnh)">
 <meta property="og:title" content="{{vi.meta.title}}">
 <meta property="og:description" content="{{vi.meta.description}}">
 <meta property="og:locale" content="vi_VN">
@@ -16,6 +22,70 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="{{vi.og.alt}}">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{vi.meta.title}}">
+<meta name="twitter:description" content="{{vi.meta.description}}">
+<meta name="twitter:image" content="{{site}}/og.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "{{site}}/#website",
+      "url": "{{site}}/",
+      "name": "Đi Chùa Online — Sân Tĩnh (Chùa Sơn Tịnh)",
+      "alternateName": [
+        "Đi Chùa Online",
+        "Chùa Online",
+        "Đi Chùa 3D",
+        "Sân Tĩnh",
+        "Chùa Sơn Tịnh",
+        "Lễ Phật Online"
+      ],
+      "description": "{{vi.meta.description}}",
+      "inLanguage": "vi-VN"
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "{{site}}/#app",
+      "name": "Sân Tĩnh — Đi Chùa Online 3D",
+      "url": "{{site}}/",
+      "applicationCategory": "LifestyleApplication",
+      "operatingSystem": "Web Browser (Chrome, Safari, Edge, Firefox)",
+      "description": "{{vi.meta.description}}",
+      "image": "{{site}}/og.jpg",
+      "inLanguage": "vi-VN",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "VND"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "{{site}}/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Đi chùa online Quốc Tế (dichua.asia) có những hoạt động gì?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tại không gian chùa online 3D Quốc Tế (Chùa Sơn Tịnh), đạo hữu có thể đi dạo trong khuôn viên chùa, vào chánh điện Tịch Mặc Đường dâng hương lễ Phật, ngồi thiền trên bồ đoàn, thỉnh đại hồng chung, gõ mõ tịnh tâm, lần tràng hạt, rút thẻ pháp ngữ bình an, thả đèn hoa đăng trên hồ sen và treo lời nguyện ước lên Cây Bồ Đề."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Đi chùa online có miễn phí và cần cài đặt ứng dụng không?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Đi Chùa hoàn toàn miễn phí và hoạt động trực tiếp trên trình duyệt điện thoại hoặc máy tính tại địa chỉ dichua.asia mà không cần tải hay cài đặt ứng dụng."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <link rel="stylesheet" href="/src/ui/tokens.css">
 <link rel="stylesheet" href="/src/ui/boot.css">
 </head>
@@ -24,7 +94,13 @@
   <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5c4-.6 7-3 9-6 2 3 5 5.4 9 6M5 11.5h14M7.5 12v7.5m9-7.5v7.5M4.5 19.5h15M10.5 14.5h3v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/></svg></span>
   <h1 data-boot="title">{{vi.boot.title}}</h1>
   <p data-boot="body">{{vi.boot.loading}}</p>
-  <noscript><p>{{vi.meta.noscript}}</p></noscript>
+  <noscript>
+    <p>{{vi.meta.noscript}}</p>
+    <section>
+      <h2>Đi Chùa Online 3D — Chùa Sơn Tịnh</h2>
+      <p>Chào mừng đạo hữu đến với Chùa Quốc Tế (dichua.asia) — không gian đi chùa online và lễ Phật 3D thanh tịnh ngay trên trình duyệt web. Cùng dâng nén tâm hương, nghe tiếng chuông chùa, gõ mõ tịnh tâm, lần tràng hạt, xin xăm pháp ngữ, thả đèn hoa đăng và ngồi thiền bình an cùng mọi người.</p>
+    </section>
+  </noscript>
   <span class="breath" data-boot="breath" aria-hidden="true"></span>
   <a class="btn--link boot-retry" data-boot="retry" href="">{{vi.boot.retry}}</a>
 </main>
