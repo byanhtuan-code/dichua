@@ -429,8 +429,8 @@ export const vi = {
       "1 · E · Space: thiền / dừng · 2: tràng hạt · 3: chắp tay · 4: gõ mõ · 5: động tác",
       "Điện thoại: chạm để đi · một ngón để nhìn quanh · hai ngón để phóng to",
     ],
-    author: "@alexlevn",
-    authorMail: "thanhdungvn@gmail.com",
+    author: "@Contact",
+    authorMail: "byanhtuan@gmail.com",
   },
   chat: {
     title: "Trò chuyện",
