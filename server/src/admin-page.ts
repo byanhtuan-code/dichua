@@ -319,11 +319,10 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
       </div>
     </header>
 
-    <!-- CỔNG ĐĂNG NHẬP ADMIN -->
     <section id="login-view" class="card login-box">
       <h2>Đăng nhập Quản trị</h2>
       <p class="desc">Nhập tài khoản và mật khẩu quản trị để mở bảng điều khiển.</p>
-      <form id="login-form" action="javascript:void(0);">
+      <form id="login-form">
         <div class="field">
           <label for="login-user">Tài khoản</label>
           <input id="login-user" type="text" autocomplete="username" value="admin" />
@@ -333,13 +332,12 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
           <input id="login-pw" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu (ví dụ: 681995)..." />
         </div>
         <div class="row-actions">
-          <button type="button" id="btn-login" style="width:100%;">Vào trang Quản trị</button>
+          <button type="submit" id="btn-login" style="width:100%;">Vào trang Quản trị</button>
         </div>
         <div id="login-msg" class="status-msg" role="status"></div>
       </form>
     </section>
 
-    <!-- BẢNG ĐIỀU KHIỂN CHÍNH -->
     <main id="app-view" hidden>
       <div class="stats-grid">
         <div class="stat-box">
@@ -363,7 +361,6 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
         <button type="button" class="tab-btn" data-tab="tab-names">4. Đổi tên 10 Phòng</button>
       </nav>
 
-      <!-- TAB 1: GIÁM SÁT TRỰC TUYẾN & ĐIỀU HÀNH -->
       <section id="tab-live" class="tab-pane">
         <div class="card">
           <h2>Phát Thông Bạch (Thông báo Chùa)</h2>
@@ -416,7 +413,6 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
         </div>
       </section>
 
-      <!-- TAB 2: QUẢN LÝ TÀI KHOẢN -->
       <section id="tab-accounts" class="tab-pane" hidden>
         <div class="card">
           <h2>
@@ -448,7 +444,6 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
         </div>
       </section>
 
-      <!-- TAB 3: SỐ PHÒNG MỖI HẠNG & SỐ BOT -->
       <section id="tab-pop" class="tab-pane" hidden>
         <div class="card">
           <h2>Số phòng mỗi hạng và số bot</h2>
@@ -480,7 +475,6 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
         </div>
       </section>
 
-      <!-- TAB 4: ĐỔI TÊN 10 PHÒNG -->
       <section id="tab-names" class="tab-pane" hidden>
         <div class="card">
           <h2>Tên phòng</h2>
@@ -510,10 +504,9 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
     };
     var TIER_KEYS = ["full", "high", "medium", "low"];
 
-    // Lưu phiên trên cả RAM để hoạt động ngay cả khi trình duyệt hoặc iframe tên miền khóa sessionStorage
     var memUser = "admin";
     var memPw = "";
-    var authMode = "pair"; // "pair" = Bearer user:pw, "pw" = Bearer pw
+    var authMode = "pair";
 
     var loginView = document.getElementById("login-view");
     var appView = document.getElementById("app-view");
@@ -532,6 +525,13 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
     var popData = null;
     var roomNamesData = null;
     var refreshTimer = null;
+
+    window.addEventListener("error", function (ev) {
+      if (loginMsg) {
+        loginMsg.textContent = "Lỗi trình duyệt: " + (ev && ev.message ? ev.message : "Không xác định");
+        loginMsg.className = "status-msg err";
+      }
+    });
 
     function getCreds() {
       if (memPw) {
@@ -629,7 +629,6 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
       startAutoRefresh();
     }
 
-    // Chuyển Tab
     var tabBtns = document.querySelectorAll(".tab-btn");
     var tabPanes = document.querySelectorAll(".tab-pane");
     for (var i = 0; i < tabBtns.length; i++) {
@@ -650,9 +649,6 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
       showLogin("Đã đăng xuất khỏi phiên quản trị.", "ok");
     });
 
-    // =========================================================================
-    // 1. TẢI DỮ LIỆU TỔNG QUAN & PHÒNG TRỰC TUYẾN
-    // =========================================================================
     var liveRoomsList = document.getElementById("live-rooms-list");
     var liveMsg = document.getElementById("live-msg");
 
@@ -822,13 +818,13 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
     }
 
     function kickVisitor(roomId, visitorId, name) {
-      if (!window.confirm("Mời đạo hữu \"" + name + "\" rời khỏi phòng " + roomId + "?")) return;
+      if (!window.confirm("Mời đạo hữu '" + name + "' rời khỏi phòng " + roomId + "?")) return;
       api("/api/admin/kick", {
         method: "POST",
         body: { room: roomId, visitorId: visitorId }
       }).then(function (res) {
         if (res.ok) {
-          setStatus(liveMsg, "Đã mời \"" + name + "\" rời khỏi phòng.", "ok");
+          setStatus(liveMsg, "Đã mời '" + name + "' rời khỏi phòng.", "ok");
           loadOverview();
         } else {
           setStatus(liveMsg, "Đạo hữu không còn trong phòng.", "warn");
@@ -884,9 +880,6 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
       });
     });
 
-    // =========================================================================
-    // 2. QUẢN LÝ TÀI KHOẢN NGƯỜI CHƠI
-    // =========================================================================
     var accTbody = document.getElementById("acc-tbody");
     var accMsg = document.getElementById("acc-msg");
     var accSearchInput = document.getElementById("acc-search");
@@ -1043,14 +1036,14 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
     }
 
     function resetAccountPassword(id, username) {
-      var nextPw = window.prompt("Nhập mật khẩu mới (tối thiểu 8 ký tự) cho tài khoản \"" + username + "\":");
+      var nextPw = window.prompt("Nhập mật khẩu mới (tối thiểu 8 ký tự) cho tài khoản '" + username + "':");
       if (nextPw === null || nextPw === "") return;
       api("/api/admin/accounts/" + id + "/password", {
         method: "PUT",
         body: { password: nextPw }
       }).then(function (res) {
         if (res.ok) {
-          setStatus(accMsg, "Đã đặt lại mật khẩu và đăng xuất các phiên cũ của \"" + username + "\".", "ok");
+          setStatus(accMsg, "Đã đặt lại mật khẩu và đăng xuất các phiên cũ của '" + username + "'.", "ok");
           loadAccounts();
           loadOverview();
         } else {
@@ -1060,12 +1053,12 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
     }
 
     function deleteAccountById(id, username) {
-      if (!window.confirm("Xóa vĩnh viễn tài khoản \"" + username + "\" (#" + id + ") và ngắt kết nối khỏi phòng?")) return;
+      if (!window.confirm("Xóa vĩnh viễn tài khoản '" + username + "' (#" + id + ") và ngắt kết nối khỏi phòng?")) return;
       api("/api/admin/accounts/" + id, {
         method: "DELETE"
       }).then(function (res) {
         if (res.ok) {
-          setStatus(accMsg, "Đã xóa tài khoản \"" + username + "\".", "ok");
+          setStatus(accMsg, "Đã xóa tài khoản '" + username + "'.", "ok");
           loadAccounts();
           loadOverview();
         } else {
@@ -1084,9 +1077,6 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
       setStatus(accMsg, "Đã làm mới danh sách tài khoản.", "ok");
     });
 
-    // =========================================================================
-    // 3. CẤU HÌNH SỐ PHÒNG MỖI HẠNG & SỐ BOT (/api/admin/population)
-    // =========================================================================
     var popTbody = document.getElementById("pop-tbody");
     var popMinBots = document.getElementById("pop-min-bots");
     var popMsg = document.getElementById("pop-msg");
@@ -1204,12 +1194,9 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
     document.getElementById("btn-reset-pop").addEventListener("click", function () {
       if (!popData || !popData.defaults) return;
       fillPopForm(popData.defaults, popData.limits);
-      setStatus(popMsg, "Đã điền cấu hình mặc định (bấm \"Lưu cấu hình Bot\" để áp dụng).", "warn");
+      setStatus(popMsg, "Đã điền cấu hình mặc định (bấm 'Lưu cấu hình Bot' để áp dụng).", "warn");
     });
 
-    // =========================================================================
-    // 4. ĐỔI TÊN 10 PHÒNG (/api/admin/rooms)
-    // =========================================================================
     var namesGrid = document.getElementById("names-grid");
     var namesMsg = document.getElementById("names-msg");
     var namesDesc = document.getElementById("names-desc");
@@ -1276,12 +1263,9 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
     document.getElementById("btn-reset-names").addEventListener("click", function () {
       if (!roomNamesData || !roomNamesData.defaults) return;
       fillNamesForm(roomNamesData.defaults, roomNamesData.maxChars);
-      setStatus(namesMsg, "Đã điền tên phòng mặc định (bấm \"Lưu tên phòng\" để áp dụng).", "warn");
+      setStatus(namesMsg, "Đã điền tên phòng mặc định (bấm 'Lưu tên phòng' để áp dụng).", "warn");
     });
 
-    // =========================================================================
-    // KHỞI ĐỘNG & ĐĂNG NHẬP
-    // =========================================================================
     function startAutoRefresh() {
       if (refreshTimer) clearInterval(refreshTimer);
       refreshTimer = setInterval(function () {
@@ -1343,7 +1327,7 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
         });
       }).catch(function (err) {
         console.error(err);
-        showLogin("Lỗi kết nối tới máy chủ. Nếu dùng tên miền dichua.asia, hãy trỏ CNAME/URL trực tiếp thay vì Frame Redirect.", "err");
+        showLogin("Lỗi kết nối tới máy chủ quản trị.", "err");
       });
     }
 
@@ -1360,25 +1344,11 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
       bootstrapAll();
     }
 
-    if (btnLogin) {
-      btnLogin.addEventListener("click", handleLoginAttempt);
-    }
     if (loginForm) {
       loginForm.addEventListener("submit", handleLoginAttempt);
     }
-    if (loginPw) {
-      loginPw.addEventListener("keydown", function (ev) {
-        if (ev.key === "Enter") {
-          handleLoginAttempt(ev);
-        }
-      });
-    }
-    if (loginUser) {
-      loginUser.addEventListener("keydown", function (ev) {
-        if (ev.key === "Enter") {
-          handleLoginAttempt(ev);
-        }
-      });
+    if (btnLogin) {
+      btnLogin.addEventListener("click", handleLoginAttempt);
     }
 
     bootstrapAll();
