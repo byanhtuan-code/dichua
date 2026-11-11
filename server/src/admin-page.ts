@@ -325,16 +325,16 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
       <form id="login-form">
         <div class="field">
           <label for="login-user">Tài khoản</label>
-          <input id="login-user" type="text" autocomplete="username" value="admin" />
+          <input id="login-user" type="text" autocomplete="username" value="***" />
         </div>
         <div class="field">
           <label for="login-pw">Mật khẩu</label>
-          <input id="login-pw" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu (ví dụ: 681995)..." />
+          <input id="login-pw" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu (***)..." />
         </div>
         <div class="row-actions">
-          <button type="submit" id="btn-login" style="width:100%;">Vào trang Quản trị</button>
+          <button type="button" id="btn-login" style="width:100%;">Vào trang Quản trị</button>
         </div>
-        <div id="login-msg" class="status-msg" role="status"></div>
+        <div id="login-msg" class="status-msg ok" role="status">Hệ thống quản trị đã sẵn sàng.</div>
       </form>
     </section>
 
@@ -614,7 +614,7 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
         clearInterval(refreshTimer);
         refreshTimer = null;
       }
-      setStatus(loginMsg, msg || "", kind || "err");
+      setStatus(loginMsg, msg || "Hệ thống quản trị đã sẵn sàng.", kind || "ok");
     }
 
     function showApp(user) {
@@ -1279,7 +1279,7 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
     function bootstrapAll() {
       var creds = getCreds();
       if (!creds.pw) {
-        showLogin("", "");
+        showLogin("Hệ thống quản trị đã sẵn sàng.", "ok");
         return;
       }
       if (btnLogin) {
@@ -1349,6 +1349,11 @@ export const ADMIN_PAGE_HTML = `<!doctype html>
     }
     if (btnLogin) {
       btnLogin.addEventListener("click", handleLoginAttempt);
+    }
+    if (loginPw) {
+      loginPw.addEventListener("keydown", function (ev) {
+        if (ev.key === "Enter") handleLoginAttempt(ev);
+      });
     }
 
     bootstrapAll();
